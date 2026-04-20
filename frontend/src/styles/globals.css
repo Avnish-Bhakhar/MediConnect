@@ -67,7 +67,6 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -132,7 +131,6 @@ body {
 .animate-float { animation: float 3s ease-in-out infinite; }
 .animate-heartbeat { animation: heartbeat 2s ease-in-out infinite; }
 
-/* Utility */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
@@ -148,7 +146,6 @@ body {
 .font-bold { font-weight: 700; }
 .font-semibold { font-weight: 600; }
 
-/* Buttons */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   padding: 0.65rem 1.5rem; border-radius: var(--radius-md); border: none;
@@ -173,7 +170,6 @@ body {
 .btn-lg { padding: 0.9rem 2rem; font-size: 1rem; }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
-/* Cards */
 .card {
   background: var(--gray-100); border-radius: var(--radius-lg); padding: 1.5rem;
   box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);
@@ -182,7 +178,6 @@ body {
 .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
 .card-hover { cursor: pointer; }
 
-/* Forms */
 .form-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.2rem; }
 .form-label { font-size: 0.875rem; font-weight: 600; color: var(--gray-700); }
 .form-input {
@@ -194,7 +189,6 @@ body {
 .form-input::placeholder { color: var(--gray-400); }
 .form-error { font-size: 0.8rem; color: var(--danger); }
 
-/* Badges */
 .badge {
   display: inline-flex; align-items: center; gap: 0.3rem;
   padding: 0.25rem 0.75rem; border-radius: 999px;
@@ -206,19 +200,16 @@ body {
 .badge-info { background: var(--primary-light); color: var(--primary); }
 .badge-secondary { background: var(--secondary-light); color: var(--secondary); }
 
-/* Skeleton */
 .skeleton {
   background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
   background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-md);
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--gray-100); }
 ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-/* Grid */
 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
@@ -226,26 +217,22 @@ body {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
 }
 
-/* Spinner */
 .spinner {
   width: 40px; height: 40px; border: 3px solid var(--gray-200);
   border-top-color: var(--primary); border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
-/* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Stars */
 .stars { display: flex; gap: 2px; }
 .star { color: var(--warning); font-size: 1rem; }
 .star-empty { color: var(--gray-300); }
 
-/* Toast */
 .toast-container {
   position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999;
   display: flex; flex-direction: column; gap: 0.75rem;
@@ -261,27 +248,17 @@ body {
 .toast-info { border-color: var(--primary); }
 .toast-warning { border-color: var(--warning); }
 
-/* Tour Guide */
 .mediconnect-tour .driver-popover-title {
-  font-family: var(--font);
-  font-size: 1rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-family: var(--font); font-size: 1rem; font-weight: 700; color: #0f172a;
 }
 .mediconnect-tour .driver-popover-description {
-  font-family: var(--font);
-  font-size: 0.875rem;
-  color: #475569;
-  line-height: 1.6;
+  font-family: var(--font); font-size: 0.875rem; color: #475569; line-height: 1.6;
 }
 .mediconnect-tour .driver-popover-next-btn {
   background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-family: var(--font) !important;
-  font-weight: 600 !important;
+  border: none !important; border-radius: 8px !important;
+  font-family: var(--font) !important; font-weight: 600 !important;
 }
 .mediconnect-tour .driver-popover-prev-btn {
-  border-radius: 8px !important;
-  font-family: var(--font) !important;
+  border-radius: 8px !important; font-family: var(--font) !important;
 }

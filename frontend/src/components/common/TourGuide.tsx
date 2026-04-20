@@ -51,6 +51,14 @@ const TourGuide = () => {
           side: 'top' as const,
         }
       },
+      {
+        element: '.navbar__theme-btn',
+        popover: {
+          title: '🌙 Dark Mode',
+          description: 'Apni preference ke hisaab se light ya dark mode toggle karo!',
+          side: 'bottom' as const,
+        }
+      },
     ];
 
     if (!user) {
@@ -67,7 +75,7 @@ const TourGuide = () => {
     const driverObj = driver({
       showProgress: true,
       animate: true,
-      overlayColor: 'rgba(0,0,0,0.6)',
+      overlayColor: 'rgba(0,0,0,0.65)',
       stagePadding: 8,
       popoverClass: 'mediconnect-tour',
       steps,
@@ -77,7 +85,7 @@ const TourGuide = () => {
       },
     });
 
-    const timer = setTimeout(() => driverObj.drive(), 1200);
+    const timer = setTimeout(() => driverObj.drive(), 1500);
     return () => clearTimeout(timer);
   }, []);
 

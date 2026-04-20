@@ -14,10 +14,10 @@ const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark');
 
-useEffect(() => {
-  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  localStorage.setItem('theme', dark ? 'dark' : 'light');
-}, [dark]);
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }, [dark]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -52,6 +52,11 @@ useEffect(() => {
         </div>
 
         <div className="navbar__actions">
+          {/* Dark mode toggle — always visible */}
+          <button className="navbar__theme-btn" onClick={() => setDark(!dark)} title="Toggle dark mode">
+            {dark ? '☀️' : '🌙'}
+          </button>
+
           {user ? (
             <>
               <button className="navbar__notif-btn" onClick={() => setShowNotif(!showNotif)}>
@@ -79,15 +84,6 @@ useEffect(() => {
               <div className="navbar__user">
                 <div className="navbar__avatar">{user.name.charAt(0).toUpperCase()}</div>
                 <span className="navbar__username">{user.name.split(' ')[0]}</span>
-                <button
-  onClick={() => setDark(!dark)}
-  style={{
-    background: 'none', border: '2px solid var(--gray-200)',
-    borderRadius: '999px', cursor: 'pointer', padding: '0.35rem 0.75rem',
-    fontSize: '1rem', transition: 'var(--transition)', color: 'var(--gray-700)'
-  }}>
-  {dark ? '☀️' : '🌙'}
-</button>
                 <button className="btn btn-outline btn-sm" onClick={handleLogout}>Logout</button>
               </div>
             </>

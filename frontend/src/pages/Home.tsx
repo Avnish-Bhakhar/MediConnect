@@ -1,10 +1,9 @@
-import TourGuide from '../components/common/TourGuide';
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import DoctorCard from '../components/common/DoctorCard';
+import TourGuide from '../components/common/TourGuide';
 import { Doctor } from '../types';
 import './Home.css';
 
@@ -23,8 +22,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="home">
-      {/* Hero */}
       <TourGuide />
+
+      {/* Hero */}
       <section className="hero">
         <div className="hero__bg-shapes">
           <div className="hero__shape hero__shape--1" />
@@ -97,7 +97,7 @@ const Home: React.FC = () => {
               { icon: '🔒', title: 'Secure & Private', desc: 'JWT-protected data, RBAC roles, and encrypted medical records.' },
               { icon: '⭐', title: 'Verified Doctors', desc: 'Every doctor is manually verified and approved by our admin team.' },
               { icon: '💊', title: 'Digital Prescriptions', desc: 'Receive prescriptions digitally after your consultation.' },
-              { icon: '📱', title: 'Fully Responsive', desc: 'Works perfectly on mobile, tablet, and desktop devices.' },
+              { icon: '🌙', title: 'Dark Mode', desc: 'Easy on the eyes — toggle between light and dark mode anytime.' },
             ].map((f, i) => (
               <div key={f.title} className="feature-card animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
                 <div className="feature-card__icon">{f.icon}</div>

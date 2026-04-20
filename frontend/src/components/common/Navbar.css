@@ -82,3 +82,13 @@
   .navbar__hamburger { display: flex; }
   .navbar__username { display: none; }
 }
+
+.navbar__theme-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--gray-100); border: 2px solid var(--gray-200);
+  cursor: pointer; font-size: 1rem; display: flex; align-items: center;
+  justify-content: center; transition: var(--transition); flex-shrink: 0;
+}
+.navbar__theme-btn:hover {
+  background: var(--primary-light); border-color: var(--primary); transform: rotate(20deg);
+}
