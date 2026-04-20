@@ -1,0 +1,58 @@
+.doctor-detail { padding-top: 70px; min-height: 100vh; background: var(--gray-50); }
+.doctor-detail__hero {
+  background: linear-gradient(135deg, var(--gray-900), #1e1b4b);
+  padding: 3rem 0;
+}
+.doctor-detail__profile { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.doctor-detail__avatar {
+  width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; font-weight: 800; color: white;
+  border: 4px solid rgba(255,255,255,0.3); flex-shrink: 0;
+}
+.doctor-detail__info h1 { font-size: 1.8rem; font-weight: 800; color: white; }
+.doctor-detail__spec { color: rgba(255,255,255,0.8); font-size: 1rem; margin: 0.4rem 0; }
+.doctor-detail__meta { display: flex; gap: 1.5rem; flex-wrap: wrap; color: rgba(255,255,255,0.7); font-size: 0.875rem; margin: 0.6rem 0; }
+.doctor-detail__body { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; padding: 2.5rem 0; }
+.availability-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.avail-day {
+  background: var(--primary-light); border-radius: var(--radius-md);
+  padding: 0.75rem; text-align: center; border: 1px solid rgba(14,165,233,0.2);
+}
+.avail-day__name { display: block; font-weight: 700; color: var(--primary); font-size: 0.875rem; }
+.avail-day__count { display: block; font-size: 0.75rem; color: var(--gray-500); margin-top: 0.2rem; }
+.booking-card {
+  background: white; border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--shadow-xl); border: 1px solid var(--gray-100); position: sticky; top: 90px;
+}
+.booking-card__header {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 1.5rem 2rem; color: white;
+}
+.booking-card__header h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+.booking-card__header p { opacity: 0.85; font-size: 0.875rem; }
+.booking-card form { padding: 1.5rem 2rem 2rem; }
+.slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.slot-btn {
+  padding: 0.5rem; border: 2px solid var(--gray-200); border-radius: var(--radius-md);
+  background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+  color: var(--gray-600); transition: var(--transition);
+}
+.slot-btn:hover { border-color: var(--primary); color: var(--primary); }
+.slot-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+.booking-fee {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem; background: var(--success-light); border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+.booking-fee span:first-child { font-size: 0.875rem; color: #065f46; font-weight: 600; }
+.booking-fee__amount { font-size: 1.2rem; font-weight: 800; color: var(--success); }
+.booking-success {
+  margin: 1rem 2rem; padding: 1rem; background: var(--success-light); color: #065f46;
+  border-radius: var(--radius-md); border-left: 3px solid var(--success); font-size: 0.875rem; font-weight: 500;
+}
+@media (max-width: 900px) {
+  .doctor-detail__body { grid-template-columns: 1fr; }
+  .booking-card { position: static; }
+  .availability-grid { grid-template-columns: repeat(3, 1fr); }
+}

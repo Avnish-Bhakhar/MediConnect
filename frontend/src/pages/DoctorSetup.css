@@ -1,0 +1,18 @@
+.doctor-setup { padding-top: 70px; min-height: 100vh; background: var(--gray-50); }
+.setup-hero { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 3rem 0; text-align: center; color: white; }
+.setup-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.setup-hero p { opacity: 0.85; margin-bottom: 2rem; }
+.setup-steps { display: flex; align-items: center; justify-content: center; gap: 3rem; }
+.setup-step { display: flex; align-items: center; gap: 0.6rem; opacity: 0.5; transition: var(--transition); }
+.setup-step.active { opacity: 1; }
+.setup-step__num { width: 32px; height: 32px; background: rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; }
+.setup-step.active .setup-step__num { background: white; color: var(--primary); }
+.setup-step span { font-weight: 600; font-size: 0.9rem; }
+.setup-form { padding: 2.5rem 0; max-width: 800px; margin: 0 auto; }
+.setup-card { background: white; border-radius: var(--radius-xl); padding: 2.5rem; box-shadow: var(--shadow-lg); }
+.setup-card h2 { font-size: 1.4rem; font-weight: 800; color: var(--gray-900); margin-bottom: 1.5rem; }
+.availability-setup { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+.availability-day-setup { background: var(--gray-50); border-radius: var(--radius-md); padding: 1rem 1.25rem; }
+.availability-day-setup h4 { font-weight: 700; color: var(--gray-700); margin-bottom: 0.75rem; font-size: 0.9rem; }
+.slots-setup-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.slot-setup-item { padding: 0.3rem 0.75rem; background: var(--primary-light); border-radius: 999px; font-size: 0.75rem; font-weight: 600; color: var(--primary); }

@@ -1,0 +1,23 @@
+.doctors-page { padding-top: 70px; min-height: 100vh; }
+.doctors-hero {
+  background: linear-gradient(135deg, var(--gray-900), #1e1b4b);
+  padding: 4rem 0 3rem; text-align: center; color: white;
+}
+.doctors-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+.doctors-hero p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; font-size: 1.05rem; }
+.doctors-search { display: flex; gap: 1rem; max-width: 600px; margin: 0 auto; flex-wrap: wrap; }
+.doctors-search__input { flex: 1; min-width: 200px; }
+.spec-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 1.5rem 0; }
+.spec-filter__btn {
+  padding: 0.5rem 1.1rem; border-radius: 999px; border: 2px solid var(--gray-200);
+  background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  color: var(--gray-600); transition: var(--transition); white-space: nowrap;
+}
+.spec-filter__btn:hover { border-color: var(--primary); color: var(--primary); }
+.spec-filter__btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+.doctors-count { color: var(--gray-500); font-size: 0.875rem; margin-bottom: 1.5rem; }
+.doctors-empty { text-align: center; padding: 5rem; }
+.doctors-empty span { font-size: 4rem; display: block; margin-bottom: 1rem; }
+.doctors-empty h3 { font-size: 1.5rem; color: var(--gray-700); margin-bottom: 0.5rem; }
+.doctors-empty p { color: var(--gray-500); }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 3rem 0; flex-wrap: wrap; }
