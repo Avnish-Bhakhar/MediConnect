@@ -41,6 +41,7 @@ app.use('/api/appointments', require('./routes/appointments'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/chat', require('./routes/chat'));
 
+app.get('/', (req, res) => res.json({ message: 'Welcome to MediConnect API. Use /api to access endpoints.' }));
 app.get('/api/health', (req, res) => res.json({ status: 'MediConnect API running', timestamp: new Date() }));
 
 // Error handler
