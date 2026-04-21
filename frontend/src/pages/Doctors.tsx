@@ -47,9 +47,9 @@ const Doctors: React.FC = () => {
           <h1 className="animate-fade-in">Find Your <span className="gradient-text">Doctor</span></h1>
           <p className="animate-fade-in">Browse {total}+ verified specialists across India</p>
           <div className="doctors-search animate-fade-in">
-            <input className="form-input doctors-search__input" placeholder="🔍 Search by name or specialty..."
+            <input className="form-input doctors-search__input" placeholder="Search by name or specialty..."
               value={filters.search} onChange={e => setFilters({...filters, search: e.target.value})} />
-            <input className="form-input" placeholder="📍 City" style={{ width: 180 }}
+            <input className="form-input" placeholder="City" style={{ width: 180 }}
               value={filters.city} onChange={e => { setFilters({...filters, city: e.target.value}); setCurrentPage(1); }} />
           </div>
         </div>
@@ -66,7 +66,7 @@ const Doctors: React.FC = () => {
           <LoadingSpinner text="Finding doctors..." />
         ) : doctors.length === 0 ? (
           <div className="doctors-empty">
-            <span>🔍</span>
+            <span>Search</span>
             <h3>No doctors found</h3>
             <p>Try adjusting your filters</p>
           </div>

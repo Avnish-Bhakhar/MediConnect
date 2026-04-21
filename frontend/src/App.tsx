@@ -13,6 +13,7 @@ import DoctorDetail from './pages/DoctorDetail';
 import Appointments from './pages/Appointments';
 import DoctorDashboard from './pages/DoctorDashboard';
 import DoctorSetup from './pages/DoctorSetup';
+import AssistantDashboard from './pages/AssistantDashboard';
 import AdminPanel from './pages/AdminPanel';
 
 interface ToastMsg { id: string; message: string; type: 'success'|'error'|'info'|'warning'; }
@@ -45,6 +46,7 @@ const AppContent = () => {
           <Route path="/appointments" element={<ProtectedRoute roles={['patient']}><Appointments /></ProtectedRoute>} />
           <Route path="/doctor/dashboard" element={<ProtectedRoute roles={['doctor']}><DoctorDashboard /></ProtectedRoute>} />
           <Route path="/doctor/setup" element={<ProtectedRoute roles={['doctor']}><DoctorSetup /></ProtectedRoute>} />
+          <Route path="/assistant/dashboard" element={<ProtectedRoute roles={['assistant', 'admin']}><AssistantDashboard /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminPanel /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

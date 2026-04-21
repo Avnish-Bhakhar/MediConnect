@@ -28,7 +28,7 @@ const DoctorDetail: React.FC = () => {
     setSubmitting(true); setError(''); setSuccess('');
     try {
       await api.post('/appointments', { doctorId: id, ...booking });
-      setSuccess('🎉 Appointment booked successfully! You will receive a confirmation shortly.');
+      setSuccess('Appointment booked successfully! You will receive a confirmation shortly.');
       setBooking({ date: '', timeSlot: '', symptoms: '' });
     } catch (err: any) {
       setError(err.response?.data?.message || 'Booking failed');
@@ -55,13 +55,13 @@ const DoctorDetail: React.FC = () => {
             <div className="doctor-detail__info">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
                 <h1>{doctor.user?.name}</h1>
-                <span className="badge badge-success">✓ Verified</span>
+                <span className="badge badge-success">Verified</span>
               </div>
               <p className="doctor-detail__spec">{doctor.specialization} · {doctor.qualification}</p>
               <div className="doctor-detail__meta">
-                <span>📍 {doctor.city}</span>
-                <span>🏥 {doctor.experience} yrs experience</span>
-                <span>💰 ₹{doctor.consultationFee} consultation</span>
+                <span>Location: {doctor.city}</span>
+                <span>Experience: {doctor.experience} yrs</span>
+                <span>Fee: ₹{doctor.consultationFee} consultation</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div className="stars">{[1,2,3,4,5].map(s => <span key={s} className={`star ${s <= stars ? '' : 'star-empty'}`}>★</span>)}</div>
@@ -97,7 +97,7 @@ const DoctorDetail: React.FC = () => {
           <div className="doctor-detail__right animate-fade-in-right">
             <div className="booking-card">
               <div className="booking-card__header">
-                <h2>📅 Book Appointment</h2>
+                <h2>Book Appointment</h2>
                 <p>Fill in details to schedule your visit</p>
               </div>
               {success && <div className="booking-success">{success}</div>}
@@ -145,7 +145,7 @@ const DoctorDetail: React.FC = () => {
                 </div>
                 <button type="submit" className="btn btn-primary w-full btn-lg"
                   disabled={submitting || !booking.date || !booking.timeSlot}>
-                  {submitting ? '⏳ Booking...' : user ? '✅ Confirm Appointment' : '🔒 Login to Book'}
+                  {submitting ? 'Booking...' : user ? 'Confirm Appointment' : 'Login to Book'}
                 </button>
                 {!user && <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--gray-500)', marginTop: '0.75rem' }}>You'll be redirected to login</p>}
               </form>

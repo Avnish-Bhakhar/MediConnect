@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Message = require('../models/Message');
 
 const socketHandler = (io) => {
   // Auth middleware for socket
@@ -22,6 +23,7 @@ const socketHandler = (io) => {
 
     // Join role-based room
     socket.join(`${socket.user.role}_${socket.user._id.toString()}`);
+    socket.join(`user_${socket.user._id.toString()}`);
     socket.join('general');
 
     socket.on('join_room', (room) => {
@@ -30,6 +32,28 @@ const socketHandler = (io) => {
 
     socket.on('send_notification', (data) => {
       io.to(data.targetRoom).emit('notification', data);
+    });
+
+    socket.on('send_message', async (data) => {
+      try {
+        const { receiverId, content, appointmentId } = data;
+        const message = new Message({
+          sender: socket.user._id,
+          receiver: receiverId,
+          content,
+          appointmentId
+        });
+        await message.save();
+        
+        const populatedMessage = await Message.findById(message._id).populate('sender', 'name avatar').populate('receiver', 'name avatar');
+
+        // Emit to receiver's personal room
+        io.to(`user_${receiverId}`).emit('receive_message', populatedMessage);
+        // Also emit back to sender so they see it
+        socket.emit('receive_message', populatedMessage);
+      } catch (error) {
+        console.error('Socket message error:', error);
+      }
     });
 
     socket.on('disconnect', () => {

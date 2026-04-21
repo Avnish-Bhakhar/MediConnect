@@ -14,7 +14,7 @@ const TourGuide = () => {
       {
         element: '.navbar__brand',
         popover: {
-          title: '🏥 Welcome to MediConnect!',
+          title: 'Welcome to MediConnect!',
           description: 'India ka trusted healthcare platform. Doctors dhundho, appointments book karo — sab kuch yahan!',
           side: 'bottom' as const,
         }
@@ -22,7 +22,7 @@ const TourGuide = () => {
       {
         element: '.navbar__links a:first-child',
         popover: {
-          title: '🔍 Find Doctors',
+          title: 'Find Doctors',
           description: 'Specialization aur city se filter karke apna doctor dhundho.',
           side: 'bottom' as const,
         }
@@ -30,7 +30,7 @@ const TourGuide = () => {
       {
         element: '.hero__actions a:first-child',
         popover: {
-          title: '📅 Book Instantly',
+          title: 'Book Instantly',
           description: 'Sirf 3 steps mein appointment book ho jaati hai — no phone calls needed!',
           side: 'top' as const,
         }
@@ -38,7 +38,7 @@ const TourGuide = () => {
       {
         element: '.spec-grid',
         popover: {
-          title: '🩺 Browse by Specialty',
+          title: 'Browse by Specialty',
           description: 'Cardiologist, Dermatologist, ya koi bhi specialist — seedha category se choose karo.',
           side: 'top' as const,
         }
@@ -46,7 +46,7 @@ const TourGuide = () => {
       {
         element: '.hero__stats',
         popover: {
-          title: '✅ Trusted Platform',
+          title: 'Trusted Platform',
           description: '500+ verified doctors aur 10,000+ happy patients ke saath India mein growing healthcare network.',
           side: 'top' as const,
         }
@@ -54,7 +54,7 @@ const TourGuide = () => {
       {
         element: '.navbar__theme-btn',
         popover: {
-          title: '🌙 Dark Mode',
+          title: 'Dark Mode',
           description: 'Apni preference ke hisaab se light ya dark mode toggle karo!',
           side: 'bottom' as const,
         }
@@ -65,7 +65,7 @@ const TourGuide = () => {
       steps.push({
         element: '.navbar__actions a:last-child',
         popover: {
-          title: '🚀 Join Free!',
+          title: 'Join Free!',
           description: 'Register karo as patient ya doctor — bilkul free hai!',
           side: 'bottom' as const,
         }

@@ -32,7 +32,7 @@ const DoctorSetup: React.FC = () => {
     <div className="doctor-setup">
       <div className="setup-hero">
         <div className="container">
-          <h1 className="animate-fade-in">🩺 Setup Your <span className="gradient-text">Doctor Profile</span></h1>
+          <h1 className="animate-fade-in">Setup Your Doctor Profile</h1>
           <p>Complete your profile to start receiving appointments</p>
           <div className="setup-steps">
             {[1, 2].map(s => (
@@ -105,10 +105,10 @@ const DoctorSetup: React.FC = () => {
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <button type="button" className="btn btn-outline btn-lg" onClick={() => setStep(1)}>← Back</button>
                 <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
-                  {loading ? '⏳ Saving...' : '🚀 Submit Profile'}
+                  {loading ? 'Saving...' : 'Submit Profile'}
                 </button>
               </div>
-              <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', marginTop: '0.75rem' }}>⏳ Your profile will be reviewed and approved by admin before going live.</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', marginTop: '0.75rem' }}>Your profile will be reviewed and approved by admin before going live.</p>
             </div>
           )}
         </form>

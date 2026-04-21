@@ -7,7 +7,7 @@ const Doctor = require('../models/Doctor');
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/mediconnect';
 
 const specializations = ['Cardiologist','Dermatologist','General Physician','Neurologist','Orthopedic','Pediatrician','Psychiatrist','Gynecologist'];
-const cities = ['Delhi','Mumbai','Bangalore','Chennai','Hyderabad','Pune','Kolkata','Chandigarh'];
+const cities = ['Delhi','Mumbai','Bangalore','Chennai','Hyderabad','Pune','Kolkata','Chandigarh','Jalandhar'];
 const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const slots = ['09:00 AM','10:00 AM','11:00 AM','12:00 PM','02:00 PM','03:00 PM','04:00 PM','05:00 PM'];
 
@@ -30,6 +30,7 @@ const seed = async () => {
     { name: 'Dr. Vikram Patel', spec: 'Neurologist', city: 'Hyderabad', fee: 1000, exp: 15 },
     { name: 'Dr. Sneha Gupta', spec: 'Pediatrician', city: 'Chandigarh', fee: 500, exp: 7 },
     { name: 'Dr. Arjun Kapoor', spec: 'Orthopedic', city: 'Pune', fee: 700, exp: 10 },
+    { name: 'Dr. Ramesh Kumar', spec: 'Cardiologist', city: 'Jalandhar', fee: 450, exp: 15 },
   ];
 
   for (const d of doctorData) {

@@ -15,7 +15,7 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
           {doctor.user?.name?.charAt(0) || 'D'}
         </div>
         <div className="doctor-card__badge">
-          <span className="badge badge-success">✓ Verified</span>
+          <span className="badge badge-success">Verified</span>
         </div>
       </div>
       <div className="doctor-card__body">
@@ -23,8 +23,8 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
         <p className="doctor-card__spec">{doctor.specialization}</p>
         <p className="doctor-card__qual">{doctor.qualification}</p>
         <div className="doctor-card__meta">
-          <span>📍 {doctor.city}</span>
-          <span>🏥 {doctor.experience} yrs exp</span>
+          <span>{doctor.city}</span>
+          <span>{doctor.experience} yrs exp</span>
         </div>
         <div className="doctor-card__rating">
           <div className="stars">

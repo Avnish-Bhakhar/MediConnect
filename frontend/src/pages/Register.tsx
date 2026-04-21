@@ -15,7 +15,7 @@ const Register: React.FC = () => {
     setError(''); setLoading(true);
     try {
       await register(form);
-      navigate(form.role === 'doctor' ? '/doctor/setup' : '/doctors');
+      navigate(form.role === 'doctor' ? '/doctor/setup' : form.role === 'assistant' ? '/assistant/dashboard' : '/doctors');
     } catch (err: any) {
       setError(err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || 'Registration failed');
     } finally { setLoading(false); }
@@ -25,12 +25,14 @@ const Register: React.FC = () => {
     <div className="auth-page">
       <div className="auth-visual">
         <div className="auth-visual__content animate-fade-in">
-          <div className="auth-visual__icon animate-heartbeat">⚕</div>
+          <div className="auth-visual__icon animate-heartbeat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
           <h2>Join MediConnect</h2>
           <p>Create your account and connect with India's best healthcare professionals today.</p>
           <div className="auth-visual__features">
             {['Free to join', 'Instant access', 'Trusted by 10,000+ users'].map(f => (
-              <div key={f} className="auth-visual__feature"><span>✓</span>{f}</div>
+              <div key={f} className="auth-visual__feature"><span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>{f}</div>
             ))}
           </div>
         </div>
@@ -42,12 +44,12 @@ const Register: React.FC = () => {
             <h1>Create Account</h1>
             <p>Start your health journey today</p>
           </div>
-          <div className="auth-role-picker">
-            {['patient', 'doctor'].map(r => (
+          <div className="auth-role-picker" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            {['patient', 'doctor', 'assistant'].map(r => (
               <button key={r} type="button"
                 className={`auth-role-btn ${form.role === r ? 'active' : ''}`}
                 onClick={() => setForm({...form, role: r})}>
-                {r === 'patient' ? '👤' : '👨‍⚕️'} {r.charAt(0).toUpperCase() + r.slice(1)}
+                {r.charAt(0).toUpperCase() + r.slice(1)}
               </button>
             ))}
           </div>
@@ -74,7 +76,7 @@ const Register: React.FC = () => {
             </div>
             {error && <div className="auth-error animate-fade-in">{error}</div>}
             <button type="submit" className="btn btn-primary w-full btn-lg" disabled={loading}>
-              {loading ? '⏳ Creating account...' : 'Create Account →'}
+              {loading ? 'Creating account...' : 'Create Account →'}
             </button>
           </form>
           <p className="auth-form__switch">

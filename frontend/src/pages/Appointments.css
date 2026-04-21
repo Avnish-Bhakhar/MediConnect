@@ -1,32 +1,47 @@
-.appointments-page { padding-top: 70px; min-height: 100vh; background: var(--gray-50); }
-.appointments-hero { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 3.5rem 0; color: white; text-align: center; }
-.appointments-hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
-.appointments-hero p { opacity: 0.85; font-size: 1rem; }
-.appt-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 1.5rem 0; }
-.appt-list { display: flex; flex-direction: column; gap: 1rem; padding-bottom: 3rem; }
+.appointments-page { padding-top: 60px; min-height: 100vh; background: var(--bg-body); }
+.appointments-hero {
+  background: var(--primary); padding: 2.5rem 0; color: white; text-align: center;
+  position: relative; overflow: hidden;
+}
+.appointments-hero::before {
+  content: ''; position: absolute; top: -40%; right: -10%;
+  width: 400px; height: 400px; border-radius: 50%; background: rgba(255,255,255,0.05);
+}
+.appointments-hero h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.35rem; letter-spacing: -0.03em; }
+.appointments-hero p { opacity: 0.8; font-size: 0.9375rem; }
+
+.appt-filters { display: flex; gap: 0.375rem; flex-wrap: wrap; padding: 1.25rem 0; }
+.appt-list { display: flex; flex-direction: column; gap: 0.75rem; padding-bottom: 3rem; }
+
 .appt-card {
-  background: white; border-radius: var(--radius-xl); padding: 1.5rem 2rem;
-  box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+  background: var(--bg-card); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-xs); border: 1px solid var(--border-color);
   display: flex; justify-content: space-between; align-items: flex-start;
-  gap: 1.5rem; transition: var(--transition);
+  gap: 1.25rem; transition: var(--transition);
 }
-.appt-card:hover { box-shadow: var(--shadow-lg); transform: translateX(4px); border-left: 3px solid var(--primary); }
-.appt-card__left { display: flex; gap: 1.25rem; align-items: flex-start; flex: 1; }
+.appt-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-50); }
+
+.appt-card__left { display: flex; gap: 1rem; align-items: flex-start; flex: 1; }
 .appt-card__avatar {
-  width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem; font-weight: 800; color: white; flex-shrink: 0;
+  width: 44px; height: 44px; background: var(--primary);
+  border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 700; color: white; flex-shrink: 0;
 }
-.appt-card__info h3 { font-size: 1.05rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.2rem; }
-.appt-card__spec { font-size: 0.85rem; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
-.appt-card__meta { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--gray-600); margin-bottom: 0.5rem; }
-.appt-card__symptoms { font-size: 0.825rem; color: var(--gray-600); font-style: italic; }
-.appt-card__prescription { font-size: 0.825rem; color: var(--success); background: var(--success-light); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); margin-top: 0.5rem; }
-.appt-card__right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; flex-shrink: 0; }
-.appt-empty { text-align: center; padding: 5rem 2rem; }
-.appt-empty span { font-size: 4rem; display: block; margin-bottom: 1rem; }
-.appt-empty h3 { font-size: 1.4rem; color: var(--gray-700); margin-bottom: 0.5rem; }
-.appt-empty p { color: var(--gray-500); }
+.appt-card__info h3 { font-size: 0.9375rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.15rem; }
+.appt-card__spec { font-size: 0.8125rem; color: var(--primary); font-weight: 600; margin-bottom: 0.375rem; }
+.appt-card__meta { display: flex; gap: 0.75rem; flex-wrap: wrap; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.375rem; }
+.appt-card__symptoms { font-size: 0.8125rem; color: var(--text-secondary); font-style: italic; }
+.appt-card__prescription {
+  font-size: 0.8125rem; color: var(--success); background: var(--success-light);
+  padding: 0.4rem 0.625rem; border-radius: var(--radius-sm); margin-top: 0.375rem;
+}
+.appt-card__right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; flex-shrink: 0; }
+
+.appt-empty { text-align: center; padding: 4rem 2rem; }
+.appt-empty span { font-size: 1rem; display: block; margin-bottom: 0.75rem; color: var(--text-muted); }
+.appt-empty h3 { font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.375rem; font-weight: 700; }
+.appt-empty p { color: var(--text-secondary); font-size: 0.875rem; }
+
 @media (max-width: 600px) {
   .appt-card { flex-direction: column; }
   .appt-card__right { flex-direction: row; align-items: center; }

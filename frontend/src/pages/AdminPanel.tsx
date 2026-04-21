@@ -52,7 +52,7 @@ const AdminPanel: React.FC = () => {
     <div className="admin-panel">
       <div className="admin-hero">
         <div className="container">
-          <h1 className="animate-fade-in">⚙️ Admin <span className="gradient-text">Control Panel</span></h1>
+          <h1 className="animate-fade-in">Admin Control Panel</h1>
           <p>Manage doctors, patients, and appointments</p>
         </div>
       </div>
@@ -61,11 +61,11 @@ const AdminPanel: React.FC = () => {
         {/* Stats */}
         <div className="admin-stats animate-fade-in">
           {[
-            { label: 'Total Patients', value: stats?.totalUsers, icon: '👤', color: 'var(--primary)' },
-            { label: 'Active Doctors', value: stats?.totalDoctors, icon: '👨‍⚕️', color: 'var(--success)' },
-            { label: 'Appointments', value: stats?.totalAppointments, icon: '📋', color: 'var(--secondary)' },
-            { label: 'Pending Approval', value: stats?.pendingDoctors, icon: '⏳', color: 'var(--warning)' },
-            { label: "Today's Appts", value: stats?.todayAppointments, icon: '📅', color: 'var(--danger)' },
+            { label: 'Total Patients', value: stats?.totalUsers, icon: 'Users', color: 'var(--primary)' },
+            { label: 'Active Doctors', value: stats?.totalDoctors, icon: 'Doctors', color: 'var(--success)' },
+            { label: 'Appointments', value: stats?.totalAppointments, icon: 'Appts', color: 'var(--secondary)' },
+            { label: 'Pending Approval', value: stats?.pendingDoctors, icon: 'Pending', color: 'var(--warning)' },
+            { label: "Today's Appts", value: stats?.todayAppointments, icon: 'Today', color: 'var(--danger)' },
           ].map(s => (
             <div key={s.label} className="admin-stat-card">
               <div className="admin-stat-card__icon" style={{ background: `${s.color}20`, color: s.color }}>{s.icon}</div>
@@ -81,7 +81,7 @@ const AdminPanel: React.FC = () => {
         <div className="admin-tabs animate-slide-down">
           {(['overview', 'doctors', 'users', 'appointments'] as const).map(t => (
             <button key={t} className={`admin-tab ${tab === t ? 'active' : ''}`} onClick={() => setTab(t)}>
-              {t === 'overview' ? '📊' : t === 'doctors' ? '👨‍⚕️' : t === 'users' ? '👥' : '📋'} {t.charAt(0).toUpperCase() + t.slice(1)}
+              {t.charAt(0).toUpperCase() + t.slice(1)}
               {t === 'doctors' && pendingDoctors.length > 0 && (
                 <span className="admin-tab__badge">{pendingDoctors.length}</span>
               )}
@@ -93,8 +93,8 @@ const AdminPanel: React.FC = () => {
         {tab === 'overview' && (
           <div className="admin-overview animate-fade-in">
             <div className="card">
-              <h3 style={{ marginBottom: '1.5rem', fontWeight: 700 }}>⏳ Doctors Pending Approval ({pendingDoctors.length})</h3>
-              {pendingDoctors.length === 0 ? <p style={{ color: 'var(--gray-500)' }}>All doctors approved ✅</p> : (
+              <h3 style={{ marginBottom: '1.5rem', fontWeight: 700 }}>Doctors Pending Approval ({pendingDoctors.length})</h3>
+              {pendingDoctors.length === 0 ? <p style={{ color: 'var(--gray-500)' }}>All doctors approved</p> : (
                 pendingDoctors.slice(0, 5).map(d => (
                   <div key={d._id} className="pending-doctor-row">
                     <div className="pending-doctor-row__avatar">{d.user?.name?.charAt(0)}</div>
@@ -104,9 +104,9 @@ const AdminPanel: React.FC = () => {
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <button className="btn btn-success btn-sm" disabled={actionLoading === d._id}
-                        onClick={() => approveDoctor(d._id, true)}>✅ Approve</button>
-                      <button className="btn btn-danger btn-sm" disabled={actionLoading === d._id}
-                        onClick={() => approveDoctor(d._id, false)}>❌ Reject</button>
+                        onClick={() => approveDoctor(d._id, true)}>Approve</button>
+                      <button className="btn btn-outline btn-sm" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}
+                        onClick={() => approveDoctor(d._id, false)}>Reject</button>
                     </div>
                   </div>
                 ))
@@ -120,7 +120,7 @@ const AdminPanel: React.FC = () => {
           <div className="animate-fade-in">
             <h3 style={{ padding: '1rem 0', fontWeight: 700, color: 'var(--gray-800)' }}>All Pending Doctors ({pendingDoctors.length})</h3>
             {pendingDoctors.length === 0 ? (
-              <div className="card" style={{ textAlign: 'center', padding: '3rem' }}><p style={{ color: 'var(--gray-500)' }}>No pending doctors 🎉</p></div>
+              <div className="card" style={{ textAlign: 'center', padding: '3rem' }}><p style={{ color: 'var(--gray-500)' }}>No pending doctors</p></div>
             ) : (
               <div className="admin-table-wrap">
                 <table className="admin-table">

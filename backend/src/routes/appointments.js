@@ -17,7 +17,7 @@ router.post('/', protect, authorize('patient'), [
 
 router.get('/my', protect, authorize('patient'), getMyAppointments);
 router.get('/doctor', protect, authorize('doctor'), getDoctorAppointments);
-router.get('/all', protect, authorize('admin'), getAllAppointments);
-router.put('/:id/status', protect, authorize('doctor', 'admin'), updateAppointmentStatus);
+router.get('/all', protect, authorize('admin', 'assistant'), getAllAppointments);
+router.put('/:id/status', protect, authorize('doctor', 'admin', 'assistant'), updateAppointmentStatus);
 
 module.exports = router;

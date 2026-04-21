@@ -39,6 +39,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/doctors', require('./routes/doctors'));
 app.use('/api/appointments', require('./routes/appointments'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/chat', require('./routes/chat'));
 
 app.get('/api/health', (req, res) => res.json({ status: 'MediConnect API running', timestamp: new Date() }));
 
