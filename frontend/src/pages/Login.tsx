@@ -52,7 +52,7 @@ const Login: React.FC = () => {
           </div>
           <div className="auth-demo-btns">
             <span>Demo:</span>
-            {['patient', 'doctor', 'admin'].map(r => (
+            {['patient', 'doctor'].map(r => (
               <button key={r} type="button" className="btn btn-outline btn-sm" onClick={() => fillDemo(r)}>{r}</button>
             ))}
           </div>
