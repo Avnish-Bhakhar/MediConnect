@@ -27,7 +27,8 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     const s = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001', {
       auth: { token },
-      transports: ['websocket'],
+      transports: ['polling', 'websocket'],
+      withCredentials: true,
     });
 
     s.on('connect', () => console.log('Socket connected'));
