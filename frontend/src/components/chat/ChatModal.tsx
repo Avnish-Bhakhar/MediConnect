@@ -23,17 +23,26 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
   const { socket } = useSocket();
   const { user } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     fetchMessages();
+
+    // Socket listener for real-time messages
     if (socket) {
       socket.on('receive_message', handleReceiveMessage);
     }
+
+    // Poll every 3 seconds as fallback (when socket is disconnected)
+    pollRef.current = setInterval(fetchMessages, 3000);
+
     return () => {
       if (socket) socket.off('receive_message', handleReceiveMessage);
+      if (pollRef.current) clearInterval(pollRef.current);
     };
   }, [socket, receiverId]);
 
@@ -42,7 +51,12 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
   }, [messages]);
 
   const handleReceiveMessage = (msg: Message) => {
-    if (msg.sender._id === receiverId || msg.receiver._id === receiverId) {
+    if (
+      msg.sender._id === receiverId ||
+      msg.receiver._id === receiverId ||
+      msg.sender._id === user?._id ||
+      msg.receiver._id === user?._id
+    ) {
       setMessages(prev => {
         if (!prev.find(m => m._id === msg._id)) return [...prev, msg];
         return prev;
@@ -61,16 +75,34 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
     }
   };
 
-  const sendMessage = (e: React.FormEvent) => {
+  const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !socket) return;
-    
-    socket.emit('send_message', {
-      receiverId,
-      content: newMessage,
-      appointmentId
-    });
+    if (!newMessage.trim() || sending) return;
+
+    const content = newMessage.trim();
     setNewMessage('');
+    setSending(true);
+
+    try {
+      // Try socket first (real-time)
+      if (socket && socket.connected) {
+        socket.emit('send_message', { receiverId, content, appointmentId });
+        // Optimistically fetch after short delay
+        setTimeout(fetchMessages, 500);
+      } else {
+        // HTTP fallback when socket is not connected
+        const res = await api.post('/chat/send', { receiverId, content, appointmentId });
+        setMessages(prev => {
+          if (!prev.find(m => m._id === res.data._id)) return [...prev, res.data];
+          return prev;
+        });
+      }
+    } catch (err) {
+      console.error('Send message failed:', err);
+      setNewMessage(content); // restore message if failed
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -78,7 +110,14 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
       <div className="chat-modal animate-slide-down">
         <div className="chat-header">
           <h3>Chat with {receiverName}</h3>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%',
+              background: socket?.connected ? '#22c55e' : '#f59e0b',
+              display: 'inline-block'
+            }} title={socket?.connected ? 'Live' : 'Polling mode'} />
+            <button className="close-btn" onClick={onClose}>×</button>
+          </div>
         </div>
         <div className="chat-body">
           {loading ? (
@@ -100,13 +139,16 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
           <div ref={messagesEndRef} />
         </div>
         <form className="chat-footer" onSubmit={sendMessage}>
-          <input 
-            type="text" 
-            placeholder="Type a message..." 
+          <input
+            type="text"
+            placeholder="Type a message..."
             value={newMessage}
             onChange={e => setNewMessage(e.target.value)}
+            disabled={sending}
           />
-          <button type="submit" disabled={!newMessage.trim()}>Send</button>
+          <button type="submit" disabled={!newMessage.trim() || sending}>
+            {sending ? '...' : 'Send'}
+          </button>
         </form>
       </div>
     </div>
