@@ -15,8 +15,10 @@ import DoctorDashboard from './pages/DoctorDashboard';
 import DoctorSetup from './pages/DoctorSetup';
 import AssistantDashboard from './pages/AssistantDashboard';
 import AdminPanel from './pages/AdminPanel';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
-interface ToastMsg { id: string; message: string; type: 'success'|'error'|'info'|'warning'; }
+interface ToastMsg { id: string; message: string; type: 'success' | 'error' | 'info' | 'warning'; }
 
 const ProtectedRoute = ({ children, roles }: { children: React.ReactNode; roles?: string[] }) => {
   const { user, isLoading } = useAuth();
@@ -41,6 +43,8 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/doctors/:id" element={<DoctorDetail />} />
           <Route path="/appointments" element={<ProtectedRoute roles={['patient']}><Appointments /></ProtectedRoute>} />

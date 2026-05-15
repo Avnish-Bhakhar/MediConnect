@@ -32,13 +32,13 @@ const Login: React.FC = () => {
       <div className="auth-visual">
         <div className="auth-visual__content animate-fade-in">
           <div className="auth-visual__icon animate-heartbeat">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
           </div>
           <h2>Welcome Back!</h2>
           <p>Your health journey continues here. Access appointments, records, and more.</p>
           <div className="auth-visual__features">
             {['Verified Doctors', 'Real-time Booking', 'Secure & Private'].map(f => (
-              <div key={f} className="auth-visual__feature"><span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>{f}</div>
+              <div key={f} className="auth-visual__feature"><span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg></span>{f}</div>
             ))}
           </div>
         </div>
@@ -60,12 +60,15 @@ const Login: React.FC = () => {
             <div className="form-group">
               <label className="form-label">Email Address</label>
               <input type="email" className="form-input" placeholder="you@example.com"
-                value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
+                value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
             </div>
             <div className="form-group">
               <label className="form-label">Password</label>
               <input type="password" className="form-input" placeholder="••••••••"
-                value={form.password} onChange={e => setForm({...form, password: e.target.value})} required />
+                value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
+            </div>
+            <div className="auth-forgot-password-link">
+              <Link to="/forgot-password">Forgot Password?</Link>
             </div>
             {error && <div className="auth-error animate-fade-in">{error}</div>}
             <button type="submit" className="btn btn-primary w-full btn-lg" disabled={loading}>
