@@ -139,7 +139,7 @@ Open **http://localhost:5173**
 
 | Role | Email | Password |
 |---|---|---|
-| Admin | admin@mediconnect.com | admin123 |
+
 | Patient | patient@mediconnect.com | patient123 |
 | Doctor | sharma@mediconnect.com | doctor123 |
 
