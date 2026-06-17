@@ -109,6 +109,8 @@ JWT_SECRET=your_super_secret_key
 JWT_EXPIRE=7d
 SESSION_SECRET=your_session_secret
 CLIENT_URL=http://localhost:5173
+# Comma-separated allowlist for CORS and Socket.IO (include local dev URL)
+CLIENT_ORIGINS=http://localhost:5173,https://medi-connect-seven-sigma.vercel.app
 NODE_ENV=development
 ```
 
@@ -123,8 +125,10 @@ node src/utils/seedData.js
 
 ```bash
 # Terminal 1 — Backend
+# If you need to run on a different port or set origins for CORS/socket, set env vars before starting.
+# Example (local dev):
 cd backend
-npm run dev
+PORT=5001 CLIENT_ORIGINS=http://localhost:5173 npm run dev
 
 # Terminal 2 — Frontend
 cd frontend
@@ -132,6 +136,10 @@ npm run dev
 ```
 
 Open **http://localhost:5173**
+
+Notes:
+- Security: The backend enforces an explicit `CLIENT_ORIGINS` allowlist for CORS and Socket.IO. In production, `CLIENT_ORIGINS` must be set or the server will refuse to start. This prevents untrusted origins from opening sockets or making cross-origin requests.
+- Socket.IO handshake Origin is validated server-side; CORS rejections return HTTP 403 with a clear message.
 
 ---
 

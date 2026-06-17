@@ -3,9 +3,21 @@ const User = require('../models/User');
 const Message = require('../models/Message');
 
 const socketHandler = (io) => {
-  // Auth middleware for socket
+  // Auth + origin-check middleware for socket
   io.use(async (socket, next) => {
     try {
+      // Validate Origin against allowlist
+      const origin = socket.handshake.headers.origin;
+      const allowedOrigins = (process.env.CLIENT_ORIGINS || process.env.CLIENT_URL || 'http://localhost:5173')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+      if (origin) {
+        if (!allowedOrigins.includes(origin)) return next(new Error('Origin not allowed'));
+      } else if (process.env.NODE_ENV === 'production') {
+        return next(new Error('Origin required'));
+      }
+
       const token = socket.handshake.auth.token;
       if (!token) return next(new Error('Authentication error'));
       const decoded = jwt.verify(token, process.env.JWT_SECRET);

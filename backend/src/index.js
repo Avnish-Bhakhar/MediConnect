@@ -12,29 +12,33 @@ const socketHandler = require('./socket/socketHandler');
 const app = express();
 const server = http.createServer(app);
 
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  'https://medi-connect-seven-sigma.vercel.app',
-  'https://frontend-gamma-silk-83.vercel.app',
-  'http://localhost:5173',
-  'http://localhost:3000',
-].filter(Boolean);
+// Build allowlist from environment. In production, require explicit configuration.
+const allowedOrigins = (process.env.CLIENT_ORIGINS || process.env.CLIENT_URL || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+if (process.env.NODE_ENV === 'production' && allowedOrigins.length === 0) {
+  console.error('ERROR: CLIENT_ORIGINS must be set in production (comma-separated list)');
+  process.exit(1);
+}
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    // Allow any vercel.app subdomain for this project
-    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
-      return callback(null, true);
+    // Disallow requests with no origin in production (prevents silent permissive behavior)
+    if (!origin) {
+      if (process.env.NODE_ENV === 'development') return callback(null, true);
+      return callback(new Error('Not allowed by CORS: origin required'));
     }
-    callback(new Error('Not allowed by CORS'));
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
 };
 
+// Socket.IO should use the same explicit allowlist (array form)
 const io = new Server(server, {
-  cors: { origin: (origin, cb) => cb(null, true), methods: ['GET', 'POST'], credentials: true }
+  cors: { origin: allowedOrigins.length ? allowedOrigins : false, methods: ['GET', 'POST'], credentials: true }
 });
 
 // Connect DB
