@@ -68,7 +68,33 @@
 .auth-form__switch { text-align: center; margin-top: 1.5rem; font-size: 0.8125rem; color: var(--text-secondary); }
 .auth-form__switch a { color: var(--primary); font-weight: 600; text-decoration: none; }
 
-@media (max-width: 768px) {
+.auth-forgot-password-link {
+  text-align: right;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.auth-forgot-password-link a {
+  color: var(--primary);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.auth-forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+.auth-success {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  border-left: 4px solid #28a745;
+}
+
+@media (max-width: 992px) {
   .auth-page { grid-template-columns: 1fr; }
   .auth-visual { display: none; }
 }
