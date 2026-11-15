@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from './AuthContext';
@@ -23,33 +25,46 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<SocketNotification[]>([]);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || typeof window === 'undefined') return;
 
-    const s = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001', {
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || process.env.VITE_SOCKET_URL || 'http://localhost:5001';
+
+    const s = io(socketUrl, {
       auth: { token },
       transports: ['polling', 'websocket'],
       withCredentials: true,
     });
 
     s.on('connect', () => console.log('Socket connected'));
-    s.on('new_appointment', (data) => {
+    s.on('new_appointment', (data: any) => {
       setNotifications(prev => [{
-        id: Date.now().toString(), message: data.message, type: 'info', timestamp: new Date()
+        id: Date.now().toString(),
+        message: data.message,
+        type: 'info',
+        timestamp: new Date()
       }, ...prev]);
     });
-    s.on('appointment_updated', (data) => {
+    s.on('appointment_updated', (data: any) => {
       setNotifications(prev => [{
-        id: Date.now().toString(), message: data.message, type: 'success', timestamp: new Date()
+        id: Date.now().toString(),
+        message: data.message,
+        type: 'success',
+        timestamp: new Date()
       }, ...prev]);
     });
-    s.on('notification', (data) => {
+    s.on('notification', (data: any) => {
       setNotifications(prev => [{
-        id: Date.now().toString(), message: data.message, type: data.type || 'info', timestamp: new Date()
+        id: Date.now().toString(),
+        message: data.message,
+        type: data.type || 'info',
+        timestamp: new Date()
       }, ...prev]);
     });
 
     setSocket(s);
-    return () => { s.disconnect(); };
+    return () => {
+      s.disconnect();
+    };
   }, [token]);
 
   const clearNotifications = () => setNotifications([]);

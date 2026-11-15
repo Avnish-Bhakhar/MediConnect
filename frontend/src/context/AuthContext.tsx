@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Doctor } from '../types';
 import api from '../api/axios';
@@ -13,7 +15,11 @@ interface AuthContextType {
 }
 
 interface RegisterData {
-  name: string; email: string; password: string; role: string; phone?: string;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  phone?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,12 +31,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const savedToken = localStorage.getItem('mediconnect_token');
     const savedUser = localStorage.getItem('mediconnect_user');
     if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
-      fetchMe(savedToken);
+      try {
+        setToken(savedToken);
+        setUser(JSON.parse(savedUser));
+        fetchMe(savedToken);
+      } catch (e) {
+        logout();
+      }
     } else {
       setIsLoading(false);
     }
@@ -51,24 +62,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     const res = await api.post('/auth/login', { email, password });
     const { token: t, user: u, doctorProfile: dp } = res.data;
-    setToken(t); setUser(u);
+    setToken(t);
+    setUser(u);
     if (dp) setDoctorProfile(dp);
-    localStorage.setItem('mediconnect_token', t);
-    localStorage.setItem('mediconnect_user', JSON.stringify(u));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mediconnect_token', t);
+      localStorage.setItem('mediconnect_user', JSON.stringify(u));
+    }
   };
 
   const register = async (data: RegisterData) => {
     const res = await api.post('/auth/register', data);
     const { token: t, user: u } = res.data;
-    setToken(t); setUser(u);
-    localStorage.setItem('mediconnect_token', t);
-    localStorage.setItem('mediconnect_user', JSON.stringify(u));
+    setToken(t);
+    setUser(u);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mediconnect_token', t);
+      localStorage.setItem('mediconnect_user', JSON.stringify(u));
+    }
   };
 
   const logout = () => {
-    setUser(null); setToken(null); setDoctorProfile(null);
-    localStorage.removeItem('mediconnect_token');
-    localStorage.removeItem('mediconnect_user');
+    setUser(null);
+    setToken(null);
+    setDoctorProfile(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('mediconnect_token');
+      localStorage.removeItem('mediconnect_user');
+    }
   };
 
   return (

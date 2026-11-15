@@ -2,14 +2,20 @@
 node_modules/
 .npm
 
+# Next.js
+.next/
+out/
+
 # Environment
 .env
 .env.local
 .env.production
+.env*.local
 
 # Build outputs
 dist/
 build/
+.vercel
 
 # Logs
 *.log

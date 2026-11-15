@@ -1,7 +1,12 @@
 {
-  "dependencies": {
-    "-": "^0.0.1",
-    "g": "^2.0.1",
-    "vercel": "^51.8.0"
+  "name": "mediconnect",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "start:frontend": "cd frontend && npm run start",
+    "start:backend": "cd backend && npm start"
   }
 }

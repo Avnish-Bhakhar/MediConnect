@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './Auth.css';
+'use client';
 
-const Login: React.FC = () => {
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
+import '@/styles/pages/Auth.css';
+
+export default function LoginPage() {
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(''); setLoading(true);
+    setError('');
+    setLoading(true);
     try {
       await login(form.email, form.password);
-      navigate('/doctors');
+      router.push('/doctors');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fillDemo = (role: string) => {
@@ -38,7 +44,12 @@ const Login: React.FC = () => {
           <p>Your health journey continues here. Access appointments, records, and more.</p>
           <div className="auth-visual__features">
             {['Verified Doctors', 'Real-time Booking', 'Secure & Private'].map(f => (
-              <div key={f} className="auth-visual__feature"><span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>{f}</div>
+              <div key={f} className="auth-visual__feature">
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                {f}
+              </div>
             ))}
           </div>
         </div>
@@ -46,7 +57,7 @@ const Login: React.FC = () => {
       <div className="auth-form-side">
         <div className="auth-form-container animate-fade-in">
           <div className="auth-form__header">
-            <Link to="/" className="auth-form__back">← Back</Link>
+            <Link href="/" className="auth-form__back">← Back</Link>
             <h1>Sign In</h1>
             <p>Access your MediConnect account</p>
           </div>
@@ -59,13 +70,25 @@ const Login: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label">Email Address</label>
-              <input type="email" className="form-input" placeholder="you@example.com"
-                value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
+              <input
+                type="email"
+                className="form-input"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={e => setForm({...form, email: e.target.value})}
+                required
+              />
             </div>
             <div className="form-group">
               <label className="form-label">Password</label>
-              <input type="password" className="form-input" placeholder="••••••••"
-                value={form.password} onChange={e => setForm({...form, password: e.target.value})} required />
+              <input
+                type="password"
+                className="form-input"
+                placeholder="••••••••"
+                value={form.password}
+                onChange={e => setForm({...form, password: e.target.value})}
+                required
+              />
             </div>
             {error && <div className="auth-error animate-fade-in">{error}</div>}
             <button type="submit" className="btn btn-primary w-full btn-lg" disabled={loading}>
@@ -73,12 +96,10 @@ const Login: React.FC = () => {
             </button>
           </form>
           <p className="auth-form__switch">
-            Don't have an account? <Link to="/register">Register here</Link>
+            Don&apos;t have an account? <Link href="/register">Register here</Link>
           </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default Login;
+}

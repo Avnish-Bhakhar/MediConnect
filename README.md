@@ -1,8 +1,8 @@
 # 🏥 MediConnect — Healthcare Appointment Platform
 
-> A full-stack real-time doctor appointment booking platform built with Node.js, Express, MongoDB, Socket.IO, React, Vite, and TypeScript.
+> A full-stack real-time doctor appointment booking platform built with Node.js, Express, MongoDB, Socket.IO, React, Next.js (App Router), and TypeScript.
 
-![MediConnect](https://img.shields.io/badge/Stack-MERN-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![MediConnect](https://img.shields.io/badge/Stack-Next.js%20%2B%20Express-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
 
@@ -34,11 +34,11 @@
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18, Vite, TypeScript |
-| Styling | Plain CSS with animations |
+| Frontend | React 18, Next.js (App Router), TypeScript |
+| Styling | Plain CSS with Glassmorphism and animations |
 | Backend | Node.js, Express.js |
 | Database | MongoDB + Mongoose |
-| Real-time | Socket.IO |
+| Real-time | Socket.IO (with HTTP polling fallback) |
 | Auth | JWT + RBAC + express-session |
 | Validation | express-validator |
 
@@ -52,7 +52,7 @@ mediconnect/
 │   └── src/
 │       ├── config/         # DB connection
 │       ├── controllers/    # Business logic
-│       ├── middleware/      # Auth, error handling
+│       ├── middleware/     # Auth, error handling
 │       ├── models/         # MongoDB schemas
 │       ├── routes/         # Express routes
 │       ├── socket/         # Socket.IO handler
@@ -60,11 +60,21 @@ mediconnect/
 └── frontend/
     └── src/
         ├── api/            # Axios config
-        ├── components/     # Reusable components
+        ├── app/            # Next.js App Router (pages & layouts)
+        │   ├── admin/
+        │   ├── appointments/
+        │   ├── assistant/dashboard/
+        │   ├── doctor/dashboard/
+        │   ├── doctor/setup/
+        │   ├── doctors/
+        │   ├── login/
+        │   ├── register/
+        │   ├── layout.tsx
+        │   ├── page.tsx
+        │   └── providers.tsx
+        ├── components/     # Reusable components (Navbar, DoctorCard, ChatModal, etc.)
         ├── context/        # Auth & Socket contexts
-        ├── hooks/          # Custom hooks
-        ├── pages/          # All page components
-        ├── styles/         # Global CSS
+        ├── styles/         # Global & page CSS
         └── types/          # TypeScript types
 ```
 

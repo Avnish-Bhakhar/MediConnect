@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './Auth.css';
+'use client';
 
-const Register: React.FC = () => {
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
+import '@/styles/pages/Auth.css';
+
+export default function RegisterPage() {
   const { register } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'patient', phone: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(''); setLoading(true);
+    setError('');
+    setLoading(true);
     try {
       await register(form);
-      navigate(form.role === 'doctor' ? '/doctor/setup' : form.role === 'assistant' ? '/assistant/dashboard' : '/doctors');
+      router.push(form.role === 'doctor' ? '/doctor/setup' : form.role === 'assistant' ? '/assistant/dashboard' : '/doctors');
     } catch (err: any) {
       setError(err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || 'Registration failed');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,10 +35,15 @@ const Register: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </div>
           <h2>Join MediConnect</h2>
-          <p>Create your account and connect with India's best healthcare professionals today.</p>
+          <p>Create your account and connect with India&apos;s best healthcare professionals today.</p>
           <div className="auth-visual__features">
             {['Free to join', 'Instant access', 'Trusted by 10,000+ users'].map(f => (
-              <div key={f} className="auth-visual__feature"><span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>{f}</div>
+              <div key={f} className="auth-visual__feature">
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                {f}
+              </div>
             ))}
           </div>
         </div>
@@ -40,15 +51,18 @@ const Register: React.FC = () => {
       <div className="auth-form-side">
         <div className="auth-form-container animate-fade-in">
           <div className="auth-form__header">
-            <Link to="/" className="auth-form__back">← Back</Link>
+            <Link href="/" className="auth-form__back">← Back</Link>
             <h1>Create Account</h1>
             <p>Start your health journey today</p>
           </div>
           <div className="auth-role-picker" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
             {['patient', 'doctor', 'assistant'].map(r => (
-              <button key={r} type="button"
+              <button
+                key={r}
+                type="button"
                 className={`auth-role-btn ${form.role === r ? 'active' : ''}`}
-                onClick={() => setForm({...form, role: r})}>
+                onClick={() => setForm({...form, role: r})}
+              >
                 {r.charAt(0).toUpperCase() + r.slice(1)}
               </button>
             ))}
@@ -56,23 +70,44 @@ const Register: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label">Full Name</label>
-              <input className="form-input" placeholder="Dr. John Smith"
-                value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
+              <input
+                className="form-input"
+                placeholder="Dr. John Smith"
+                value={form.name}
+                onChange={e => setForm({...form, name: e.target.value})}
+                required
+              />
             </div>
             <div className="form-group">
               <label className="form-label">Email</label>
-              <input type="email" className="form-input" placeholder="you@example.com"
-                value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
+              <input
+                type="email"
+                className="form-input"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={e => setForm({...form, email: e.target.value})}
+                required
+              />
             </div>
             <div className="form-group">
               <label className="form-label">Phone (optional)</label>
-              <input className="form-input" placeholder="+91 9876543210"
-                value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+              <input
+                className="form-input"
+                placeholder="+91 9876543210"
+                value={form.phone}
+                onChange={e => setForm({...form, phone: e.target.value})}
+              />
             </div>
             <div className="form-group">
               <label className="form-label">Password</label>
-              <input type="password" className="form-input" placeholder="Min 6 characters"
-                value={form.password} onChange={e => setForm({...form, password: e.target.value})} required />
+              <input
+                type="password"
+                className="form-input"
+                placeholder="Min 6 characters"
+                value={form.password}
+                onChange={e => setForm({...form, password: e.target.value})}
+                required
+              />
             </div>
             {error && <div className="auth-error animate-fade-in">{error}</div>}
             <button type="submit" className="btn btn-primary w-full btn-lg" disabled={loading}>
@@ -80,12 +115,10 @@ const Register: React.FC = () => {
             </button>
           </form>
           <p className="auth-form__switch">
-            Already have an account? <Link to="/login">Sign in</Link>
+            Already have an account? <Link href="/login">Sign in</Link>
           </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default Register;
+}

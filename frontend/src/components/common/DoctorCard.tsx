@@ -1,9 +1,13 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Doctor } from '../../types';
 import './DoctorCard.css';
 
-interface Props { doctor: Doctor; }
+interface Props {
+  doctor: Doctor;
+}
 
 const DoctorCard: React.FC<Props> = ({ doctor }) => {
   const stars = Math.round(Number(doctor.rating));
@@ -28,7 +32,7 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
         </div>
         <div className="doctor-card__rating">
           <div className="stars">
-            {[1,2,3,4,5].map(s => (
+            {[1, 2, 3, 4, 5].map(s => (
               <span key={s} className={`star ${s <= stars ? '' : 'star-empty'}`}>★</span>
             ))}
           </div>
@@ -40,7 +44,9 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
         </div>
       </div>
       <div className="doctor-card__footer">
-        <Link to={`/doctors/${doctor._id}`} className="btn btn-primary w-full">Book Appointment</Link>
+        <Link href={`/doctors/${doctor._id}`} className="btn btn-primary w-full">
+          Book Appointment
+        </Link>
       </div>
     </div>
   );

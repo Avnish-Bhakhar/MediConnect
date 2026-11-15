@@ -37,37 +37,46 @@ Backend aapke platform ka engine hai. Ye database se connect hota hai, authentic
 
 ---
 
-## 💻 Frontend (React + Vite + TypeScript)
+## 💻 Frontend (React + Next.js App Router + TypeScript)
 *Folder: `/frontend/`*
 
-Frontend wo hissa hai jo users apne browser par dekhte hain. Ise React aur Vite ka use karke banaya gaya hai jisse ye bahut fast hai.
+Frontend wo hissa hai jo users apne browser par dekhte hain. Ise **React 18** aur **Next.js 14 (App Router)** ka use karke banaya gaya hai jisse ye bahut fast, modern aur SEO-friendly hai.
 
 ### Important Folders & Files:
 
-- **`package.json`**: Frontend ki libraries (react, axios, react-router-dom) ki list.
-- **`index.html`**: Main HTML file jisme poora React app inject hota hai.
-- **`src/main.tsx`**: React application ka starting point. Ye `App.tsx` ko DOM me render karta hai.
-- **`src/App.tsx`**: Ye file aapke website ki saari **Routing (Navigation)** handle karti hai. Jaise konsa URL konsa page dikhayega.
+- **`package.json`**: Frontend ki libraries (react, next, axios, socket.io-client, driver.js) ki list.
+- **`next.config.mjs`**: Next.js ki configuration file.
+- **`src/app/layout.tsx`**: Website ka Root Layout (Fonts, Global CSS, Metadata aur Global Providers ko wrap karta hai).
+- **`src/app/providers.tsx`**: Client Providers jo AuthContext, SocketContext, Toast notifications aur Navbar inject karte hain.
 
 **Inside `/frontend/src/` :**
 
 - 📂 **`api/`**
-  - `axios.js`: Backend se data lane/bhejne ke liye Axios ka configuration yahan hota hai (Base URL aur Tokens attach karne ka logic).
+  - `axios.ts`: Backend se data lane/bhejne ke liye Axios ka configuration yahan hota hai (Base URL aur Tokens attach karne ka logic).
 - 📂 **`context/`** (Global State)
   - `AuthContext.tsx`: User logged in hai ya nahi, uski details aur login/logout functions poore app me yahan se milte hain.
   - `SocketContext.tsx`: Live connection (Socket.IO) ko poore app me access dene ke liye.
 - 📂 **`components/`** (Chhote, Reusable UI hisse)
-  - `common/Navbar.tsx`: Upar ka navigation bar.
-  - `chat/ChatModal.tsx`: Jo live chat karne ke liye popup (modal) open hota hai, uska code yahan hai.
+  - `common/Navbar.tsx`: Upar ka navigation bar with Dark mode toggle aur live alerts.
+  - `chat/ChatModal.tsx`: Real-time chat popup (modal) with live WebSocket + polling fallback.
+  - `common/DoctorCard.tsx`: Doctor information card with rating, fee aur booking link.
   - `common/LoadingSpinner.tsx`: Loading animation jab data fetch ho raha ho.
-- 📂 **`pages/`** (Main Screens)
-  - `Home.tsx`: Main landing page jahan website start hoti hai.
-  - `Login.tsx` / `Register.tsx`: Accounts banane aur login karne ke pages.
-  - `Appointments.tsx`: Patient ka dashboard jahan wo apni appointments dekhta hai aur chat start kar sakta hai.
-  - `DoctorDashboard.tsx`: Doctor ka apna personal dashboard (appointments approve karna, prescription dena).
-  - `AssistantDashboard.tsx`: Staff/Assistant ke liye ek screen jahan wo clinic ki saari appointments approve ya deny kar sakte hain.
+  - `common/TourGuide.tsx`: Website interactive tour walkthrough for new visitors.
+  - `common/ProtectedRoute.tsx`: Route protection based on user login & roles (Patient, Doctor, Admin, Assistant).
+- 📂 **`app/`** (Next.js App Router Screens)
+  - `page.tsx`: Main landing page (`/`).
+  - `login/page.tsx`: Login screen (`/login`).
+  - `register/page.tsx`: Registration screen (`/register`).
+  - `doctors/page.tsx`: Doctors search & filter screen (`/doctors`).
+  - `doctors/[id]/page.tsx`: Doctor details & appointment booking screen (`/doctors/:id`).
+  - `appointments/page.tsx`: Patient ka appointments dashboard (`/appointments`).
+  - `doctor/dashboard/page.tsx`: Doctor personal dashboard (`/doctor/dashboard`).
+  - `doctor/setup/page.tsx`: Doctor profile setup screen (`/doctor/setup`).
+  - `assistant/dashboard/page.tsx`: Staff/Assistant dashboard (`/assistant/dashboard`).
+  - `admin/page.tsx`: Admin control panel (`/admin`).
 - 📂 **`styles/`** (Design aur Colors)
-  - `globals.css`: Website ka naya, premium aur sundar design. Isme Glassmorphism (Sheeshe jaisa effect) aur saare animations likhe gaye hain.
+  - `globals.css`: Website ka global design system, Glassmorphism, animations aur variables.
+  - `pages/`: Individual page CSS files.
 
 ---
 

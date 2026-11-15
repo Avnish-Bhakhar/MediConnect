@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 import { driver, DriveStep } from 'driver.js';
 import 'driver.js/dist/driver.css';
@@ -7,6 +9,8 @@ const TourGuide = () => {
   const { user } = useAuth();
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const seen = localStorage.getItem('tour_done');
     if (seen) return;
 
@@ -80,14 +84,23 @@ const TourGuide = () => {
       popoverClass: 'mediconnect-tour',
       steps,
       onDestroyStarted: () => {
-        localStorage.setItem('tour_done', 'true');
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('tour_done', 'true');
+        }
         driverObj.destroy();
       },
     });
 
-    const timer = setTimeout(() => driverObj.drive(), 1500);
+    const timer = setTimeout(() => {
+      try {
+        driverObj.drive();
+      } catch (err) {
+        console.warn('Driver error:', err);
+      }
+    }, 1500);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [user]);
 
   return null;
 };

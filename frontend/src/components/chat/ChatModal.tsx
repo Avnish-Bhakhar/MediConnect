@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import api from '../../api/axios';
 import { useSocket } from '../../context/SocketContext';
@@ -52,10 +54,10 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
 
   const handleReceiveMessage = (msg: Message) => {
     if (
-      msg.sender._id === receiverId ||
-      msg.receiver._id === receiverId ||
-      msg.sender._id === user?._id ||
-      msg.receiver._id === user?._id
+      msg.sender?._id === receiverId ||
+      msg.receiver?._id === receiverId ||
+      msg.sender?._id === user?._id ||
+      msg.receiver?._id === user?._id
     ) {
       setMessages(prev => {
         if (!prev.find(m => m._id === msg._id)) return [...prev, msg];
@@ -111,12 +113,17 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
         <div className="chat-header">
           <h3>Chat with {receiverName}</h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%',
-              background: socket?.connected ? '#22c55e' : '#f59e0b',
-              display: 'inline-block'
-            }} title={socket?.connected ? 'Live' : 'Polling mode'} />
-            <button className="close-btn" onClick={onClose}>×</button>
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                background: socket?.connected ? '#22c55e' : '#f59e0b',
+                display: 'inline-block'
+              }}
+              title={socket?.connected ? 'Live' : 'Polling mode'}
+            />
+            <button className="close-btn" onClick={onClose} type="button">×</button>
           </div>
         </div>
         <div className="chat-body">
@@ -126,7 +133,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ receiverId, receiverName, appoint
             <div className="chat-empty">Start the conversation...</div>
           ) : (
             messages.map((msg, idx) => (
-              <div key={msg._id || idx} className={`chat-message ${msg.sender._id === user?._id ? 'sent' : 'received'}`}>
+              <div key={msg._id || idx} className={`chat-message ${msg.sender?._id === user?._id ? 'sent' : 'received'}`}>
                 <div className="chat-bubble">
                   {msg.content}
                 </div>

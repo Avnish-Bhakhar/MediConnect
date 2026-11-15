@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import './Navbar.css';
@@ -17,16 +20,28 @@ const BellIcon = () => (
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const { notifications } = useSocket();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark');
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        setDark(true);
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    }
   }, [dark]);
 
   useEffect(() => {
@@ -35,13 +50,17 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleLogout = () => { logout(); navigate('/'); };
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
+
   const unread = notifications.length;
 
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__container">
-        <Link to="/" className="navbar__brand">
+        <Link href="/" className="navbar__brand">
           <div className="navbar__logo">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </div>
@@ -49,29 +68,29 @@ const Navbar: React.FC = () => {
         </Link>
 
         <div className={`navbar__links ${menuOpen ? 'navbar__links--open' : ''}`}>
-          <Link to="/doctors" className={`navbar__link ${location.pathname === '/doctors' ? 'active' : ''}`}>Find Doctors</Link>
+          <Link href="/doctors" className={`navbar__link ${pathname === '/doctors' ? 'active' : ''}`}>Find Doctors</Link>
           {user?.role === 'patient' && (
-            <Link to="/appointments" className={`navbar__link ${location.pathname === '/appointments' ? 'active' : ''}`}>My Appointments</Link>
+            <Link href="/appointments" className={`navbar__link ${pathname === '/appointments' ? 'active' : ''}`}>My Appointments</Link>
           )}
           {user?.role === 'doctor' && (
-            <Link to="/doctor/dashboard" className={`navbar__link ${location.pathname.includes('/doctor') ? 'active' : ''}`}>Dashboard</Link>
+            <Link href="/doctor/dashboard" className={`navbar__link ${pathname.includes('/doctor') ? 'active' : ''}`}>Dashboard</Link>
           )}
           {user?.role === 'admin' && (
-            <Link to="/admin" className={`navbar__link ${location.pathname.includes('/admin') ? 'active' : ''}`}>Admin</Link>
+            <Link href="/admin" className={`navbar__link ${pathname.includes('/admin') ? 'active' : ''}`}>Admin</Link>
           )}
           {user?.role === 'assistant' && (
-            <Link to="/assistant/dashboard" className={`navbar__link ${location.pathname.includes('/assistant') ? 'active' : ''}`}>Dashboard</Link>
+            <Link href="/assistant/dashboard" className={`navbar__link ${pathname.includes('/assistant') ? 'active' : ''}`}>Dashboard</Link>
           )}
         </div>
 
         <div className="navbar__actions">
-          <button className="navbar__theme-btn" onClick={() => setDark(!dark)} title="Toggle dark mode">
+          <button className="navbar__theme-btn" onClick={() => setDark(!dark)} title="Toggle dark mode" type="button">
             {dark ? <SunIcon /> : <MoonIcon />}
           </button>
 
           {user ? (
             <>
-              <button className="navbar__notif-btn" onClick={() => setShowNotif(!showNotif)}>
+              <button className="navbar__notif-btn" onClick={() => setShowNotif(!showNotif)} type="button">
                 <BellIcon />
                 {unread > 0 && <span className="navbar__badge">{unread}</span>}
               </button>
@@ -96,16 +115,16 @@ const Navbar: React.FC = () => {
               <div className="navbar__user">
                 <div className="navbar__avatar">{user.name.charAt(0).toUpperCase()}</div>
                 <span className="navbar__username">{user.name.split(' ')[0]}</span>
-                <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
+                <button className="btn btn-ghost btn-sm" onClick={handleLogout} type="button">Logout</button>
               </div>
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-ghost btn-sm">Login</Link>
-              <Link to="/register" className="btn btn-primary btn-sm">Sign Up</Link>
+              <Link href="/login" className="btn btn-ghost btn-sm">Login</Link>
+              <Link href="/register" className="btn btn-primary btn-sm">Sign Up</Link>
             </>
           )}
-          <button className="navbar__hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+          <button className="navbar__hamburger" onClick={() => setMenuOpen(!menuOpen)} type="button">
             <span></span><span></span><span></span>
           </button>
         </div>
