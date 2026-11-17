@@ -18,6 +18,8 @@ router.post('/', protect, authorize('patient'), [
 router.get('/my', protect, authorize('patient'), getMyAppointments);
 router.get('/doctor', protect, authorize('doctor'), getDoctorAppointments);
 router.get('/all', protect, authorize('admin', 'assistant'), getAllAppointments);
-router.put('/:id/status', protect, authorize('doctor', 'admin', 'assistant'), updateAppointmentStatus);
+router.put('/:id/status', protect, authorize('doctor', 'admin', 'assistant', 'patient'), [
+  body('status').isIn(['pending', 'confirmed', 'cancelled', 'completed']).withMessage('Valid status required: pending, confirmed, cancelled, or completed')
+], validate, updateAppointmentStatus);
 
 module.exports = router;

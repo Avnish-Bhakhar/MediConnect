@@ -87,17 +87,67 @@ exports.updateAppointmentStatus = async (req, res) => {
 
     if (!appointment) return res.status(404).json({ success: false, message: 'Appointment not found' });
 
+    const patientId = appointment.patient?._id ? appointment.patient._id.toString() : appointment.patient?.toString();
+    const doctorUserId = appointment.doctor?.user?._id ? appointment.doctor.user._id.toString() : appointment.doctor?.user?.toString();
+
+    // Role-based authorization & validation checks
+    if (req.user.role === 'patient') {
+      // Patients can only cancel their own appointments
+      if (patientId !== req.user._id.toString()) {
+        return res.status(403).json({ success: false, message: 'Not authorized to modify this appointment' });
+      }
+
+      if (req.body.status !== 'cancelled') {
+        return res.status(403).json({ success: false, message: 'Patients can only cancel appointments' });
+      }
+
+      if (appointment.status === 'completed') {
+        return res.status(400).json({ success: false, message: 'Cannot cancel an already completed appointment' });
+      }
+
+      if (appointment.status === 'cancelled') {
+        return res.status(400).json({ success: false, message: 'Appointment is already cancelled' });
+      }
+    } else if (req.user.role === 'doctor') {
+      // Doctors can only modify appointments assigned to them
+      if (doctorUserId && doctorUserId !== req.user._id.toString()) {
+        return res.status(403).json({ success: false, message: 'Not authorized to modify appointments for another doctor' });
+      }
+    }
+
     appointment.status = req.body.status;
-    if (req.body.prescription) appointment.prescription = req.body.prescription;
-    if (req.body.notes) appointment.notes = req.body.notes;
+
+    // Only doctors, admins, or assistants can modify prescriptions and notes
+    if (req.user.role !== 'patient') {
+      if (req.body.prescription !== undefined) appointment.prescription = req.body.prescription;
+      if (req.body.notes !== undefined) appointment.notes = req.body.notes;
+    }
+
     await appointment.save();
 
-    // Notify patient
+    // Socket Notifications
     if (req.io) {
-      req.io.to(`patient_${appointment.patient._id.toString()}`).emit('appointment_updated', {
-        appointment,
-        message: `Appointment ${req.body.status} by Dr. ${appointment.doctor.user.name}`
-      });
+      if (req.user.role === 'patient') {
+        if (doctorUserId) {
+          req.io.to(`doctor_${doctorUserId}`).emit('appointment_updated', {
+            appointment,
+            message: `Appointment cancelled by ${req.user.name}`
+          });
+        }
+      } else {
+        const updaterName = req.user.role === 'doctor'
+          ? `Dr. ${appointment.doctor?.user?.name || 'Doctor'}`
+          : req.user.role === 'admin'
+            ? 'Administrator'
+            : 'Clinic Assistant';
+
+        if (patientId) {
+          req.io.to(`patient_${patientId}`).emit('appointment_updated', {
+            appointment,
+            message: `Appointment ${req.body.status} by ${updaterName}`
+          });
+        }
+      }
     }
 
     res.json({ success: true, appointment });
