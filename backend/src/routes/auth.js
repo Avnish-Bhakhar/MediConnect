@@ -8,8 +8,15 @@ const router = express.Router();
 
 router.post('/register', [
   body('name').trim().notEmpty().withMessage('Name required'),
-  body('email').isEmail().withMessage('Valid email required'),
-  body('password').isLength({ min: 6 }).withMessage('Password min 6 chars'),
+  body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('role')
+    .optional()
+    .isIn(['patient', 'doctor', 'assistant'])
+    .withMessage('Role must be patient, doctor, or assistant. Admin registration is prohibited.'),
+  body('phone')
+    .optional({ checkFalsy: true })
+    .trim(),
 ], validate, register);
 
 router.post('/login', [
