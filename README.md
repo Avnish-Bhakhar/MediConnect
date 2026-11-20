@@ -205,33 +205,6 @@ Open **http://localhost:5173**
 3. Build command: `npm run build`
 4. Output: `dist`
 
----
-
-## 📚 Syllabus Coverage
-
-| Course | Topic | Implementation |
-|---|---|---|
-| INT222 | Node.js + npm | Backend foundation |
-| INT222 | Express routing | All API routes |
-| INT222 | express-validator | Input validation |
-| INT222 | Socket.IO | Real-time notifications |
-| INT222 | JWT + RBAC | Auth middleware |
-| INT222 | express-session | Session middleware |
-| INT222 | MongoDB + Mongoose | All data models |
-| INT222 | CRUD operations | Full appointment lifecycle |
-| INT219 | HTML5 + CSS3 | Semantic frontend |
-| INT219 | Flexbox + Grid | Responsive layouts |
-| INT219 | TypeScript | Typed components |
-| INT219 | DOM manipulation | React + hooks |
-| INT219 | Async/await | API calls |
-
----
-
-## 👥 Team
-
-Built as a semester project for Advanced Web Development (INT222 + INT219).
-
----
 
 ## 📄 License
 
