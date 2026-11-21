@@ -1,6 +1,8 @@
 const Doctor = require('../models/Doctor');
 const User = require('../models/User');
 
+const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 exports.createDoctorProfile = async (req, res) => {
   try {
     const existing = await Doctor.findOne({ user: req.user._id });
@@ -14,19 +16,51 @@ exports.createDoctorProfile = async (req, res) => {
 
 exports.getAllDoctors = async (req, res) => {
   try {
-    const { specialization, city, page = 1, limit = 9 } = req.query;
+    const { specialization, city, search, page = 1, limit = 9 } = req.query;
     const query = { isApproved: true };
-    if (specialization) query.specialization = { $regex: specialization, $options: 'i' };
-    if (city) query.city = { $regex: city, $options: 'i' };
+
+    if (specialization && specialization.trim() && specialization.trim() !== 'All') {
+      query.specialization = { $regex: escapeRegex(specialization.trim()), $options: 'i' };
+    }
+
+    if (city && city.trim()) {
+      query.city = { $regex: escapeRegex(city.trim()), $options: 'i' };
+    }
+
+    if (search && search.trim()) {
+      const cleanSearch = escapeRegex(search.trim());
+      const searchRegex = { $regex: cleanSearch, $options: 'i' };
+
+      // Find user IDs whose name matches the search term
+      const matchingUsers = await User.find({ name: searchRegex }).select('_id');
+      const userIds = matchingUsers.map((u) => u._id);
+
+      query.$or = [
+        { specialization: searchRegex },
+        { hospital: searchRegex },
+        { qualification: searchRegex },
+        { bio: searchRegex },
+        { user: { $in: userIds } },
+      ];
+    }
+
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.max(1, parseInt(limit, 10) || 9);
 
     const total = await Doctor.countDocuments(query);
     const doctors = await Doctor.find(query)
       .populate('user', 'name email avatar phone')
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
       .sort({ rating: -1 });
 
-    res.json({ success: true, doctors, total, pages: Math.ceil(total / limit), currentPage: Number(page) });
+    res.json({
+      success: true,
+      doctors,
+      total,
+      pages: Math.ceil(total / limitNum) || 1,
+      currentPage: pageNum,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

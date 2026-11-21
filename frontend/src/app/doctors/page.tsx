@@ -42,8 +42,8 @@ function DoctorsContent() {
     try {
       const params = new URLSearchParams({ page: String(currentPage), limit: '9' });
       if (filters.specialization) params.set('specialization', filters.specialization);
-      if (filters.city) params.set('city', filters.city);
-      if (filters.search) params.set('search', filters.search);
+      if (filters.city.trim()) params.set('city', filters.city.trim());
+      if (filters.search.trim()) params.set('search', filters.search.trim());
       const res = await api.get(`/doctors?${params}`);
       setDoctors(res.data.doctors || []);
       setTotal(res.data.total || 0);
@@ -73,7 +73,10 @@ function DoctorsContent() {
               className="form-input doctors-search__input"
               placeholder="Search by name or specialty..."
               value={filters.search}
-              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              onChange={(e) => {
+                setFilters({ ...filters, search: e.target.value });
+                setCurrentPage(1);
+              }}
             />
             <input
               className="form-input"
@@ -109,9 +112,24 @@ function DoctorsContent() {
           <LoadingSpinner text="Finding doctors..." />
         ) : doctors.length === 0 ? (
           <div className="doctors-empty">
-            <span>Search</span>
+            <span style={{ fontSize: '2rem', display: 'block', marginBottom: '1rem', color: 'var(--gray-400)' }}>
+              🔍
+            </span>
             <h3>No doctors found</h3>
-            <p>Try adjusting your filters</p>
+            <p>Try adjusting your search query or filters</p>
+            {(filters.search || filters.city || filters.specialization) && (
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                style={{ marginTop: '1rem' }}
+                onClick={() => {
+                  setFilters({ specialization: '', city: '', search: '' });
+                  setCurrentPage(1);
+                }}
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         ) : (
           <>
