@@ -2,13 +2,15 @@ const express = require('express');
 const { protect, authorize } = require('../middleware/auth');
 const {
   createDoctorProfile, getAllDoctors, getDoctorById,
-  updateDoctorProfile, updateAvailability, approveDoctor, getPendingDoctors
+  updateDoctorProfile, updateAvailability, approveDoctor, getPendingDoctors,
+  getAvailableSlots
 } = require('../controllers/doctorController');
 
 const router = express.Router();
 
 router.get('/', getAllDoctors);
 router.get('/pending', protect, authorize('admin'), getPendingDoctors);
+router.get('/:id/available-slots', getAvailableSlots);
 router.get('/:id', getDoctorById);
 router.post('/', protect, authorize('doctor'), createDoctorProfile);
 router.put('/profile', protect, authorize('doctor'), updateDoctorProfile);

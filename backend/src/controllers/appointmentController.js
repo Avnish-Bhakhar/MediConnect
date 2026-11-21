@@ -8,15 +8,41 @@ exports.bookAppointment = async (req, res) => {
     if (!doctor) return res.status(404).json({ success: false, message: 'Doctor not found' });
     if (!doctor.isApproved) return res.status(400).json({ success: false, message: 'Doctor not available' });
 
+    const appointmentDate = new Date(date);
+    if (isNaN(appointmentDate.getTime())) {
+      return res.status(400).json({ success: false, message: 'Invalid appointment date' });
+    }
+
+    // Disallow booking for past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const bookingDay = new Date(appointmentDate);
+    bookingDay.setHours(0, 0, 0, 0);
+    if (bookingDay < today) {
+      return res.status(400).json({ success: false, message: 'Cannot book appointments for past dates' });
+    }
+
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
     // Check slot conflict
     const existing = await Appointment.findOne({
-      doctor: doctorId, date: new Date(date), timeSlot, status: { $in: ['pending', 'confirmed'] }
+      doctor: doctorId,
+      date: { $gte: startOfDay, $lte: endOfDay },
+      timeSlot,
+      status: { $in: ['pending', 'confirmed'] }
     });
     if (existing) return res.status(400).json({ success: false, message: 'Slot already booked' });
 
     const appointment = await Appointment.create({
-      patient: req.user._id, doctor: doctorId, date: new Date(date),
-      timeSlot, symptoms, fee: doctor.consultationFee
+      patient: req.user._id,
+      doctor: doctorId,
+      date: startOfDay,
+      timeSlot,
+      symptoms,
+      fee: doctor.consultationFee
     });
 
     const populated = await appointment.populate([

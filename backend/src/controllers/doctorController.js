@@ -1,5 +1,6 @@
 const Doctor = require('../models/Doctor');
 const User = require('../models/User');
+const Appointment = require('../models/Appointment');
 
 exports.createDoctorProfile = async (req, res) => {
   try {
@@ -81,6 +82,56 @@ exports.getPendingDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find({ isApproved: false }).populate('user', 'name email phone');
     res.json({ success: true, doctors });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getAvailableSlots = async (req, res) => {
+  try {
+    const { date } = req.query;
+    if (!date) return res.status(400).json({ success: false, message: 'Date query parameter is required' });
+
+    const doctor = await Doctor.findById(req.params.id);
+    if (!doctor) return res.status(404).json({ success: false, message: 'Doctor not found' });
+
+    const targetDate = new Date(date);
+    if (isNaN(targetDate.getTime())) {
+      return res.status(400).json({ success: false, message: 'Invalid date format' });
+    }
+
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayName = days[targetDate.getDay()];
+
+    const daySchedule = doctor.availability?.find((a) => a.day === dayName);
+    if (!daySchedule || !daySchedule.slots || daySchedule.slots.length === 0) {
+      return res.json({ success: true, day: dayName, date, slots: [] });
+    }
+
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+    const bookedAppointments = await Appointment.find({
+      doctor: doctor._id,
+      date: { $gte: startOfDay, $lte: endOfDay },
+      status: { $in: ['pending', 'confirmed'] }
+    }).select('timeSlot');
+
+    const bookedTimeSlots = new Set(bookedAppointments.map((a) => a.timeSlot));
+
+    const slots = daySchedule.slots.map((s) => ({
+      time: s.time,
+      isBooked: s.isBooked || bookedTimeSlots.has(s.time)
+    }));
+
+    res.json({
+      success: true,
+      day: dayName,
+      date,
+      slots
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
