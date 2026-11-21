@@ -42,6 +42,13 @@
 }
 .slot-btn:hover { border-color: var(--primary); color: var(--primary); }
 .slot-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+.slot-btn:disabled, .slot-btn.booked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: var(--bg-hover);
+  border-color: var(--border-color);
+  text-decoration: line-through;
+}
 
 .booking-fee {
   display: flex; justify-content: space-between; align-items: center;
