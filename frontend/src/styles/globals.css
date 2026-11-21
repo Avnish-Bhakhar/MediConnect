@@ -336,3 +336,176 @@ body {
 .mediconnect-tour .driver-popover-prev-btn {
   border-radius: var(--radius-sm) !important; font-family: var(--font) !important;
 }
+
+/* ==================================================
+RESPONSIVE DESIGN
+Mobile: 320px - 480px
+Tablet: 481px - 767px
+Small Laptop: 768px - 992px
+================================================== */
+
+/* ==================== SMALL LAPTOPS ==================== */
+@media screen and (min-width: 768px) and (max-width: 992px) {
+
+.container {
+padding: 0 1.25rem;
+}
+
+.grid-4 {
+grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+grid-template-columns: repeat(2, 1fr);
+}
+
+.card {
+padding: 1.25rem;
+}
+
+.toast {
+min-width: 280px;
+}
+}
+
+/* ==================== TABLETS ==================== */
+@media screen and (min-width: 481px) and (max-width: 767px) {
+
+.container {
+padding: 0 1rem;
+}
+
+.grid-2,
+.grid-3,
+.grid-4 {
+grid-template-columns: 1fr;
+gap: 1rem;
+}
+
+.card {
+padding: 1.25rem;
+}
+
+.btn-lg {
+padding: 0.75rem 1.5rem;
+}
+
+.toast-container {
+top: 1rem;
+right: 1rem;
+left: 1rem;
+}
+
+.toast {
+min-width: unset;
+width: 100%;
+}
+
+.flex.gap-4 {
+gap: 1rem;
+}
+}
+
+/* ==================== MOBILES ==================== */
+@media screen and (min-width: 320px) and (max-width: 480px) {
+
+html {
+font-size: 14px;
+}
+
+.container {
+padding: 0 0.875rem;
+}
+
+.grid-2,
+.grid-3,
+.grid-4 {
+grid-template-columns: 1fr;
+gap: 0.875rem;
+}
+
+.card {
+padding: 1rem;
+border-radius: var(--radius-md);
+}
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-success,
+.btn-outline,
+.btn-ghost {
+width: 100%;
+}
+
+.btn-lg {
+width: 100%;
+padding: 0.75rem 1rem;
+}
+
+.form-input {
+padding: 0.75rem;
+font-size: 16px; /* prevents iOS zoom */
+}
+
+.form-group {
+margin-bottom: 1rem;
+}
+
+.badge {
+font-size: 0.7rem;
+}
+
+.toast-container {
+top: 1rem;
+left: 0.75rem;
+right: 0.75rem;
+}
+
+.toast {
+min-width: unset;
+width: 100%;
+padding: 0.75rem;
+font-size: 0.8125rem;
+}
+
+.spinner {
+width: 28px;
+height: 28px;
+}
+
+.stars {
+flex-wrap: wrap;
+}
+
+.flex.gap-4,
+.flex.gap-3 {
+gap: 0.75rem;
+}
+}
+
+/* ==================== EXTRA SMALL DEVICES ==================== */
+@media screen and (max-width: 360px) {
+
+html {
+font-size: 13px;
+}
+
+.container {
+padding: 0 0.75rem;
+}
+
+.card {
+padding: 0.875rem;
+}
+
+.btn {
+padding: 0.625rem 0.875rem;
+}
+
+.toast {
+font-size: 0.75rem;
+}
+}
+
