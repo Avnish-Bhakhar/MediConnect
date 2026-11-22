@@ -13,4 +13,6 @@ const appointmentSchema = new mongoose.Schema({
   fee: { type: Number, required: true }
 }, { timestamps: true });
 
+appointmentSchema.index({ doctor: 1, date: 1, timeSlot: 1 });
+
 module.exports = mongoose.model('Appointment', appointmentSchema);
