@@ -46,3 +46,28 @@
   .appt-card { flex-direction: column; }
   .appt-card__right { flex-direction: row; align-items: center; }
 }
+
+/* Patient Review Modal Styles */
+.review-modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 1rem;
+}
+.review-modal-content {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1.75rem; width: 100%; max-width: 480px;
+  box-shadow: var(--shadow-lg); border: 1px solid var(--border-color);
+  animation: fadeIn 0.2s ease-out;
+}
+.star-rating-select {
+  display: flex; gap: 0.5rem; margin: 0.75rem 0 1rem; font-size: 1.75rem;
+}
+.star-btn {
+  background: none; border: none; cursor: pointer; color: var(--gray-300);
+  transition: transform 0.15s ease, color 0.15s ease; padding: 0; line-height: 1;
+}
+.star-btn:hover, .star-btn.active {
+  color: #f59e0b;
+  transform: scale(1.15);
+}

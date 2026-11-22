@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import api from '../../../api/axios';
 import { useAuth } from '../../../context/AuthContext';
 import LoadingSpinner from '../../../components/common/LoadingSpinner';
-import { Doctor } from '../../../types';
+import { Doctor, Review } from '../../../types';
 import '@/styles/pages/DoctorDetail.css';
 
 export default function DoctorDetailPage() {
@@ -14,6 +14,7 @@ export default function DoctorDetailPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState({ date: '', timeSlot: '', symptoms: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -32,6 +33,11 @@ export default function DoctorDetailPage() {
         console.error('Failed to load doctor:', err);
       })
       .finally(() => setLoading(false));
+
+    api
+      .get(`/reviews/doctor/${id}`)
+      .then((res) => setReviews(res.data.reviews || []))
+      .catch((err) => console.error('Failed to load reviews:', err));
   }, [id]);
 
   const handleDateChange = async (dateStr: string) => {
@@ -157,6 +163,56 @@ export default function DoctorDetailPage() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div className="card" style={{ marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <h3 style={{ color: 'var(--gray-800)', fontWeight: 700, margin: 0 }}>
+                  Patient Reviews ({reviews.length})
+                </h3>
+                {reviews.length > 0 && (
+                  <span style={{ fontWeight: 600, color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    ★ {doctor.rating} / 5
+                  </span>
+                )}
+              </div>
+              {reviews.length === 0 ? (
+                <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>
+                  No reviews yet. Complete an appointment with this doctor to leave the first review!
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {reviews.map((rev) => (
+                    <div
+                      key={rev._id}
+                      style={{
+                        padding: '0.75rem 0',
+                        borderBottom: '1px solid var(--border-color)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.25rem',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--gray-800)' }}>
+                          {rev.patient?.name || 'Verified Patient'}
+                        </span>
+                        <span style={{ color: '#f59e0b', fontSize: '0.8125rem' }}>
+                          {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
+                        </span>
+                      </div>
+                      {rev.comment && (
+                        <p style={{ color: 'var(--gray-600)', fontSize: '0.875rem', margin: 0, lineHeight: 1.5 }}>
+                          {rev.comment}
+                        </p>
+                      )}
+                      <span style={{ fontSize: '0.75rem', color: 'var(--gray-400)' }}>
+                        {new Date(rev.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
