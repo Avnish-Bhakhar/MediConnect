@@ -8,7 +8,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   doctorProfile: Doctor | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ user: User; doctorProfile?: Doctor }>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('mediconnect_token', t);
       localStorage.setItem('mediconnect_user', JSON.stringify(u));
     }
+    return { user: u, doctorProfile: dp };
   };
 
   const register = async (data: RegisterData) => {

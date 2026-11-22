@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+const defaultBaseUrl =
+  typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? 'https://mediconnect-api-lyni.onrender.com/api'
+    : 'http://localhost:5001/api';
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.VITE_API_URL || 'http://localhost:5001/api'
+  baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.VITE_API_URL || defaultBaseUrl
 });
 
 api.interceptors.request.use((config) => {

@@ -27,7 +27,11 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!token || typeof window === 'undefined') return;
 
-    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || process.env.VITE_SOCKET_URL || 'http://localhost:5001';
+    const defaultSocketUrl =
+      typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+        ? 'https://mediconnect-api-lyni.onrender.com'
+        : 'http://localhost:5001';
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || process.env.VITE_SOCKET_URL || defaultSocketUrl;
 
     const s = io(socketUrl, {
       auth: { token },

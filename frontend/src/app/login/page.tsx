@@ -18,8 +18,16 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      await login(form.email, form.password);
-      router.push('/doctors');
+      const res = await login(form.email, form.password);
+      if (res?.user?.role === 'admin') {
+        router.push('/admin');
+      } else if (res?.user?.role === 'doctor') {
+        router.push('/doctor/dashboard');
+      } else if (res?.user?.role === 'assistant') {
+        router.push('/assistant/dashboard');
+      } else {
+        router.push('/doctors');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {
@@ -63,7 +71,7 @@ export default function LoginPage() {
           </div>
           <div className="auth-demo-btns">
             <span>Demo:</span>
-            {['patient', 'doctor'].map(r => (
+            {['patient', 'doctor', 'admin'].map(r => (
               <button key={r} type="button" className="btn btn-outline btn-sm" onClick={() => fillDemo(r)}>{r}</button>
             ))}
           </div>
