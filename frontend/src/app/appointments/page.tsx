@@ -24,10 +24,33 @@ function AppointmentsContent() {
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [chatUser, setChatUser] = useState<{ id: string; name: string; appointmentId: string } | null>(null);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [reviewedApptIds, setReviewedApptIds] = useState<Set<string>>(new Set());
+  const [reviewModal, setReviewModal] = useState<{
+    appointmentId: string;
+    doctorName: string;
+    doctorId: string;
+  } | null>(null);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
+    fetchReviewedAppointments();
   }, [filter, page]);
+
+  const fetchReviewedAppointments = async () => {
+    try {
+      const res = await api.get('/reviews/my');
+      if (res.data.reviews) {
+        const ids = new Set<string>(res.data.reviews.map((r: any) => String(r.appointment)));
+        setReviewedApptIds(ids);
+      }
+    } catch (e) {
+      // Non-critical, ignore if fails
+    }
+  };
 
   const fetchAppointments = async () => {
     setLoading(true);
@@ -42,6 +65,28 @@ function AppointmentsContent() {
       console.error('Failed to fetch appointments:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewModal) return;
+    setSubmittingReview(true);
+    try {
+      await api.post('/reviews', {
+        appointmentId: reviewModal.appointmentId,
+        rating,
+        comment,
+      });
+      setReviewedApptIds((prev) => new Set(prev).add(reviewModal.appointmentId));
+      alert('Thank you! Your review has been submitted successfully.');
+      setReviewModal(null);
+      setComment('');
+      setRating(5);
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to submit review');
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -177,6 +222,28 @@ function AppointmentsContent() {
                       Chat
                     </button>
                   )}
+                  {appt.status === 'completed' && (
+                    reviewedApptIds.has(appt._id) ? (
+                      <span className="badge badge-success" style={{ fontSize: '0.75rem' }}>
+                        ★ Reviewed
+                      </span>
+                    ) : (
+                      <button
+                        className="btn btn-sm btn-outline"
+                        style={{ color: '#d97706', borderColor: '#f59e0b' }}
+                        onClick={() =>
+                          setReviewModal({
+                            appointmentId: appt._id,
+                            doctorName: appt.doctor?.user?.name || 'Doctor',
+                            doctorId: appt.doctor?._id,
+                          })
+                        }
+                        type="button"
+                      >
+                        ★ Rate Doctor
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
             ))}
@@ -219,6 +286,73 @@ function AppointmentsContent() {
           appointmentId={chatUser.appointmentId}
           onClose={() => setChatUser(null)}
         />
+      )}
+
+      {reviewModal && (
+        <div className="review-modal-overlay" onClick={() => !submittingReview && setReviewModal(null)}>
+          <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ margin: 0, fontWeight: 700, fontSize: '1.125rem' }}>
+                Rate & Review Doctor
+              </h3>
+              <button
+                type="button"
+                style={{ background: 'none', border: 'none', fontSize: '1.25rem', cursor: 'pointer', color: 'var(--text-muted)' }}
+                onClick={() => setReviewModal(null)}
+              >
+                ✕
+              </button>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '1rem' }}>
+              How was your consultation with <strong>{reviewModal.doctorName}</strong>?
+            </p>
+            <form onSubmit={handleReviewSubmit}>
+              <div className="form-group">
+                <label className="form-label">Your Rating</label>
+                <div className="star-rating-select">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star-btn ${star <= rating ? 'active' : ''}`}
+                      onClick={() => setRating(star)}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Feedback (optional)</label>
+                <textarea
+                  className="form-input"
+                  rows={3}
+                  placeholder="Share details of your experience to help other patients..."
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  maxLength={1000}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1.25rem' }}>
+                <button
+                  type="button"
+                  className="btn btn-outline btn-sm"
+                  onClick={() => setReviewModal(null)}
+                  disabled={submittingReview}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-sm"
+                  disabled={submittingReview}
+                >
+                  {submittingReview ? 'Submitting...' : 'Submit Review'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

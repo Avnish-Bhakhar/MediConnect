@@ -63,3 +63,17 @@ export interface Notification {
   type: 'success' | 'error' | 'info' | 'warning';
   timestamp: Date;
 }
+
+export interface Review {
+  _id: string;
+  patient: {
+    _id: string;
+    name: string;
+    avatar?: string;
+  };
+  doctor: string;
+  appointment: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+}
