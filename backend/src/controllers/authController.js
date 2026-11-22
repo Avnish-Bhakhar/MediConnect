@@ -7,10 +7,21 @@ const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expires
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role, phone } = req.body;
+
+    const allowedRoles = ['patient', 'doctor', 'assistant'];
+    const assignedRole = role || 'patient';
+
+    if (!allowedRoles.includes(assignedRole)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid role. Administrative accounts cannot be registered publicly.'
+      });
+    }
+
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ success: false, message: 'Email already registered' });
 
-    const user = await User.create({ name, email, password, role: role || 'patient', phone });
+    const user = await User.create({ name, email, password, role: assignedRole, phone });
     const token = generateToken(user._id);
     res.status(201).json({ success: true, token, user });
   } catch (error) {

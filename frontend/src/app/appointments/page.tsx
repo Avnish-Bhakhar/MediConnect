@@ -91,12 +91,16 @@ function AppointmentsContent() {
   };
 
   const cancelAppointment = async (id: string) => {
-    if (!confirm('Cancel this appointment?')) return;
+    if (!confirm('Are you sure you want to cancel this appointment?')) return;
+    setCancellingId(id);
     try {
       await api.put(`/appointments/${id}/status`, { status: 'cancelled' });
       fetchAppointments();
-    } catch (e) {
-      alert('Cancel failed');
+    } catch (e: any) {
+      const errMsg = e.response?.data?.message || e.response?.data?.errors?.[0]?.msg || 'Cancel failed';
+      alert(errMsg);
+    } finally {
+      setCancellingId(null);
     }
   };
 
@@ -203,8 +207,9 @@ function AppointmentsContent() {
                       className="btn btn-danger btn-sm"
                       onClick={() => cancelAppointment(appt._id)}
                       type="button"
+                      disabled={cancellingId === appt._id}
                     >
-                      Cancel
+                      {cancellingId === appt._id ? 'Cancelling...' : 'Cancel'}
                     </button>
                   )}
                   {appt.status === 'confirmed' && (

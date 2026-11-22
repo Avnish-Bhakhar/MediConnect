@@ -5,6 +5,7 @@
   "scripts": {
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run --prefix frontend build",
     "build:frontend": "cd frontend && npm run build",
     "start:frontend": "cd frontend && npm run start",
     "start:backend": "cd backend && npm start"

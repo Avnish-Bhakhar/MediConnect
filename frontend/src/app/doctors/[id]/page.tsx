@@ -21,6 +21,8 @@ export default function DoctorDetailPage() {
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [selectedDay, setSelectedDay] = useState('');
+  const [slots, setSlots] = useState<Array<{ time: string; isBooked: boolean }>>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -38,6 +40,31 @@ export default function DoctorDetailPage() {
       .catch((err) => console.error('Failed to load reviews:', err));
   }, [id]);
 
+  const handleDateChange = async (dateStr: string) => {
+    if (!dateStr) {
+      setSelectedDay('');
+      setSlots([]);
+      setBooking((prev) => ({ ...prev, date: '', timeSlot: '' }));
+      return;
+    }
+    const d = new Date(dateStr);
+    const dayName = d.toLocaleDateString('en-US', { weekday: 'long' });
+    setSelectedDay(dayName);
+    setBooking((prev) => ({ ...prev, date: dateStr, timeSlot: '' }));
+
+    setLoadingSlots(true);
+    try {
+      const res = await api.get(`/doctors/${id}/available-slots?date=${dateStr}`);
+      setSlots(res.data.slots || []);
+    } catch (e) {
+      console.error('Failed to fetch available slots:', e);
+      const dayAvail = doctor?.availability?.find((a) => a.day === dayName);
+      setSlots(dayAvail?.slots || []);
+    } finally {
+      setLoadingSlots(false);
+    }
+  };
+
   const handleBook = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -50,18 +77,16 @@ export default function DoctorDetailPage() {
     try {
       await api.post('/appointments', { doctorId: id, ...booking });
       setSuccess('Appointment booked successfully! You will receive a confirmation shortly.');
+      const bookedDate = booking.date;
       setBooking({ date: '', timeSlot: '', symptoms: '' });
+      if (bookedDate) {
+        await handleDateChange(bookedDate);
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Booking failed');
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const getAvailableSlots = () => {
-    if (!doctor || !selectedDay) return [];
-    const dayAvail = doctor.availability?.find((a) => a.day === selectedDay);
-    return dayAvail?.slots?.filter((s) => !s.isBooked) || [];
   };
 
   if (loading) return <LoadingSpinner fullScreen text="Loading doctor profile..." />;
@@ -207,32 +232,42 @@ export default function DoctorDetailPage() {
                     className="form-input"
                     min={new Date().toISOString().split('T')[0]}
                     value={booking.date}
-                    onChange={(e) => {
-                      const d = new Date(e.target.value);
-                      const dayName = d.toLocaleDateString('en-US', { weekday: 'long' });
-                      setSelectedDay(dayName);
-                      setBooking({ ...booking, date: e.target.value, timeSlot: '' });
-                    }}
+                    onChange={(e) => handleDateChange(e.target.value)}
                     required
                   />
                 </div>
                 {selectedDay && (
                   <div className="form-group">
-                    <label className="form-label">Time Slot — {selectedDay}</label>
+                    <label className="form-label">
+                      Time Slot — {selectedDay}{' '}
+                      {loadingSlots && (
+                        <span style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 500 }}>
+                          (Checking availability...)
+                        </span>
+                      )}
+                    </label>
                     <div className="slots-grid">
-                      {getAvailableSlots().length === 0 ? (
-                        <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>
+                      {loadingSlots ? (
+                        <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem', gridColumn: 'span 3' }}>
+                          Loading available slots...
+                        </p>
+                      ) : slots.length === 0 ? (
+                        <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem', gridColumn: 'span 3' }}>
                           No slots available for this day
                         </p>
                       ) : (
-                        getAvailableSlots().map((slot) => (
+                        slots.map((slot) => (
                           <button
                             key={slot.time}
                             type="button"
-                            className={`slot-btn ${booking.timeSlot === slot.time ? 'active' : ''}`}
-                            onClick={() => setBooking({ ...booking, timeSlot: slot.time })}
+                            className={`slot-btn ${booking.timeSlot === slot.time ? 'active' : ''} ${
+                              slot.isBooked ? 'booked' : ''
+                            }`}
+                            onClick={() => !slot.isBooked && setBooking({ ...booking, timeSlot: slot.time })}
+                            disabled={slot.isBooked}
+                            title={slot.isBooked ? 'Already booked for this date' : `Select ${slot.time}`}
                           >
-                            {slot.time}
+                            {slot.time} {slot.isBooked && '✕'}
                           </button>
                         ))
                       )}
